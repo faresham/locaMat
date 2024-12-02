@@ -25,17 +25,6 @@ export class AuthComponent {
     }
   }
 
-  // Fonction pour s'inscrire avec email et mot de passe
-  async signUp() {
-    try {
-      const userCredential = await this.afAuth.createUserWithEmailAndPassword(this.email, this.password);
-      console.log('Inscription réussie', userCredential);
-      this.router.navigate(['/home']); // Rediriger vers le tableau de bord après l'inscription
-    } catch (error: any) {
-      this.errorMessage = error.message;  // Afficher l'erreur si l'inscription échoue
-    }
-  }
-
   // Fonction pour se déconnecter
   async logout() {
     try {
