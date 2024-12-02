@@ -19,9 +19,9 @@ export class AuthComponent {
     try {
       const userCredential = await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
       console.log('Connexion réussie', userCredential);
-      this.router.navigate(['/dashboard']); // Rediriger vers le tableau de bord après la connexion
+      this.router.navigate(['/home']);
     } catch (error: any) {
-      this.errorMessage = error.message;  // Afficher l'erreur si la connexion échoue
+      this.errorMessage = error.message;
     }
   }
 
@@ -30,7 +30,7 @@ export class AuthComponent {
     try {
       const userCredential = await this.afAuth.createUserWithEmailAndPassword(this.email, this.password);
       console.log('Inscription réussie', userCredential);
-      this.router.navigate(['/dashboard']); // Rediriger vers le tableau de bord après l'inscription
+      this.router.navigate(['/home']); // Rediriger vers le tableau de bord après l'inscription
     } catch (error: any) {
       this.errorMessage = error.message;  // Afficher l'erreur si l'inscription échoue
     }

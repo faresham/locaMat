@@ -10,17 +10,22 @@ import { environment } from '../environments/environment';  // Assure-toi que tu
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { FormsModule } from '@angular/forms';
+import { HomeComponent } from './home/home.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent],
   imports: [
-    RouterModule,
-    AppRoutingModule,
-    BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
     AngularFirestoreModule,
+    RouterModule,
+    AppRoutingModule,
+    BrowserModule,
     FormsModule,
+    MatInputModule,
+    MatButtonModule,
     // Pour Firestore
   ],
   providers: [],
