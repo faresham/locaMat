@@ -13,9 +13,12 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { HeaderComponent } from './header/header.component';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
@@ -26,6 +29,8 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatToolbar,
+    MatIconModule,
     // Pour Firestore
   ],
   providers: [],
