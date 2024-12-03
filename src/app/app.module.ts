@@ -14,7 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { HeaderComponent } from './header/header.component';
-import { MatToolbar } from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
@@ -29,9 +29,8 @@ import { MatIconModule } from '@angular/material/icon';
     FormsModule,
     MatInputModule,
     MatButtonModule,
-    MatToolbar,
+    MatToolbarModule,
     MatIconModule,
-    // Pour Firestore
   ],
   providers: [],
   bootstrap: [AppComponent]
