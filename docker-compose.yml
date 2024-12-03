@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  # Service pour votre application Angular
   app:
     build: .
     ports:
@@ -10,6 +11,37 @@ services:
     networks:
       - app-network
 
+  # Service pour PostgreSQL, utilisé par SquashTM
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: squash
+      POSTGRES_PASSWORD: squash
+      POSTGRES_DB: squash
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Service SquashTM
+  squash-tm:
+    image: squashtest/squash-tm:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SQUASH_DB_HOST: postgres
+      SQUASH_DB_PORT: 5432
+      SQUASH_DB_NAME: squash
+      SQUASH_DB_USER: squash
+      SQUASH_DB_PASSWORD: squash
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres_data:
