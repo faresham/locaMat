@@ -11,7 +11,6 @@
   justify-content: space-between; /* Espace entre les éléments gauche et droite */
   align-items: center;
   z-index: 1000; /* S'assurer que le footer reste au-dessus des autres éléments */
-  //box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner un effet de profondeur */
 }
 
 /* Version de l'application */

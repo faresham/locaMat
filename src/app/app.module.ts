@@ -21,12 +21,11 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { initializeApp } from 'firebase/app';
 import {getAuth} from 'firebase/auth';
-import { UserManagementComponent } from './user-management/user-management.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, UserManagementComponent, SidebarComponent, FooterComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
