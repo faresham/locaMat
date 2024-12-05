@@ -25,18 +25,30 @@ export class UserService {
   }
 
   // Ajouter un utilisateur
-  addUser(user: User): Promise<void> {
+  addUser(user: User): Observable<void> {
     const id = this.firestore.createId();
-    return this.firestore.collection<User>(this.collectionName).doc(id).set(user);
+    return new Observable<void>((observer) => {
+      this.firestore.collection<User>(this.collectionName).doc(id).set(user)
+        .then(() => observer.next())
+        .catch((error) => observer.error(error));
+    });
   }
 
   // Modifier un utilisateur
-  updateUser(id: string, user: Partial<User>): Promise<void> {
-    return this.firestore.collection<User>(this.collectionName).doc(id).update(user);
+  updateUser(id: string, user: Partial<User>): Observable<void> {
+    return new Observable<void>((observer) => {
+      this.firestore.collection<User>(this.collectionName).doc(id).update(user)
+        .then(() => observer.next())
+        .catch((error) => observer.error(error));
+    });
   }
 
   // Supprimer un utilisateur
-  deleteUser(id: string): Promise<void> {
-    return this.firestore.collection<User>(this.collectionName).doc(id).delete();
+  deleteUser(id: string): Observable<void> {
+    return new Observable<void>((observer) => {
+      this.firestore.collection<User>(this.collectionName).doc(id).delete()
+        .then(() => observer.next())
+        .catch((error) => observer.error(error));
+    });
   }
 }

@@ -1,26 +1,22 @@
-<mat-toolbar>
-  <!-- Menu Button -->
-  <button mat-icon-button aria-label="Menu">
+<mat-toolbar class="sticky-header">
+  <!-- Bouton à gauche pour afficher/masquer la sidebar -->
+  <button mat-icon-button aria-label="Menu" (click)="toggleSidebar.emit()">
     <mat-icon>menu</mat-icon>
   </button>
 
-  <!-- Title -->
+  <!-- Titre de l'application -->
   <span>LocaMat</span>
 
-  <span class="spacer"></span>
+  <span class="spacer"></span> <!-- Cela pousse les éléments à droite -->
 
-  <!-- Affichage de l'utilisateur connecté (si disponible) -->
-  <div *ngIf="user; else noUser">
-    <span>{{ user.displayName || user.email }}</span> <!-- Affiche le nom de l'utilisateur ou son email -->
+  <!-- Affichage des informations utilisateur et menu -->
+  <div *ngIf="userDetails" class="user-info">
+    <span>{{ userDetails.prenom }} {{ userDetails.nom }}</span> <!-- Affichage nom et prénom -->
+    <button mat-icon-button aria-label="Profil" (click)="viewProfile()">
+      <mat-icon>account_circle</mat-icon> <!-- Icône Profil -->
+    </button>
     <button mat-icon-button aria-label="Déconnexion" (click)="logout()">
-      <mat-icon>logout</mat-icon> <!-- Icône de déconnexion -->
+      <mat-icon>logout</mat-icon> <!-- Icône Déconnexion -->
     </button>
   </div>
-
-  <!-- Affichage si aucun utilisateur n'est connecté -->
-  <ng-template #noUser>
-    <button mat-icon-button aria-label="Connexion" (click)="goToLogin()">
-      <mat-icon>account_circle</mat-icon> <!-- Icône de connexion -->
-    </button>
-  </ng-template>
 </mat-toolbar>

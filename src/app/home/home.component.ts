@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../services/user/user.service';
 
 @Component({
   selector: 'app-home',
@@ -7,12 +6,8 @@ import {UserService} from '../services/user/user.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  constructor(public userService: UserService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    // Souscrire à l'observable pour récupérer l'utilisateur connecté
-    this.userService.getUsers().subscribe((data) => {
-      console.log(data);
-    });
   }
 }

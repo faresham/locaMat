@@ -1,42 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth/auth.service'; // Assure-toi d'importer ton service d'authentification
-import { User } from 'firebase/auth';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { AuthService } from '../services/auth/auth.service';
+import {Router} from '@angular/router';  // Importer votre service d'authentification
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
+export class HeaderComponent {
+  @Output() toggleSidebar = new EventEmitter<void>(); // Événement pour basculer l'état de la sidebar
+  userDetails: any; // Pour stocker les informations de l'utilisateur connecté
 
-export class HeaderComponent implements OnInit {
-  user: User | null = null; // Initialisation avec null
-
-  constructor(private authService: AuthService) {}
-
-  ngOnInit(): void {
-    // Souscrire à l'observable pour récupérer l'utilisateur connecté
-    /*this.authService.getCurrentUser().subscribe((data) => {
-      this.user = data;  // L'utilisateur peut être null si personne n'est connecté
-    });*/
+  constructor(private authService: AuthService, private router: Router) {
+    // Récupérer les détails de l'utilisateur connecté
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.authService.getUserDetails(user.uid).subscribe(details => {
+          this.userDetails = details; // On récupère et stocke les informations de l'utilisateur
+        });
+      }
+    });
   }
-  // Méthode de déconnexion
-  logout(): void {
-  /*
+
+  // Fonction de déconnexion
+  logout() {
     this.authService.signOut().then(() => {
       console.log('Utilisateur déconnecté');
-      this.user = null;  // Réinitialiser user à null après la déconnexion
-    }).catch((error) => {
-      console.error('Erreur de déconnexion:', error);
+      this.router.navigate(['/login']);
+      // Vous pouvez rediriger vers la page de connexion ici, si besoin
     });
-   */
   }
 
-  // Méthode de redirection vers la page de connexion (si nécessaire)
-  goToLogin(): void {
-  /*
-    console.log('Naviguer vers la page de connexion');
-    // Ici, tu pourrais naviguer vers une page de login, par exemple :
-    // this.router.navigate(['/login']);
-   */
+  // Fonction vide pour voir le profil (à implémenter plus tard)
+  viewProfile() {
+    console.log('Voir le profil');
+    // Logique à implémenter plus tard pour afficher le profil
   }
 }

@@ -1,0 +1,91 @@
+/* Styles de base pour la sidebar */
+.sidebar {
+  background-color: #f9f9f9;   /* Garde la couleur originale */
+  color: #000000;
+  position: fixed;
+  top: 64px;                    /* Commence juste en dessous du header (64px de hauteur) */
+  left: 0;
+  height: calc(100vh - 64px - 50px); /* La sidebar prend toute la hauteur, sauf celle du header et du footer */
+  width: 0;                     /* Commence avec une largeur de 0 */
+  transition: width 0.3s ease, box-shadow 0.3s ease; /* Transition douce pour l'ouverture et l'ombre */
+  overflow: hidden;             /* Empêche le débordement du contenu lorsque fermée */
+  z-index: 999;                 /* Assure que la sidebar est au-dessus des autres éléments, mais en dessous du header */
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre subtile pour donner de la profondeur */
+}
+
+/* Lorsque la sidebar est ouverte */
+.sidebar-open {
+  width: 250px;                 /* Largeur de la sidebar lorsqu'elle est ouverte */
+}
+
+/* Styles pour les éléments de la sidebar */
+.sidebar ul {
+  list-style-type: none;
+  padding: 20px 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.sidebar ul li a {
+  color: #000000;               /* Garde la couleur originale pour le texte */
+  text-decoration: none;
+  padding: 15px;
+  display: block;
+  border-radius: 8px;           /* Coins arrondis pour un look plus moderne */
+  transition: background-color 0.3s, padding-left 0.3s; /* Transition pour un effet fluide */
+}
+
+/* Effet de survol (hover) */
+.sidebar ul li a:hover {
+  background-color: #646e78;    /* Couleur de fond lors du survol */
+  padding-left: 20px;            /* Décalage vers la droite pour donner un effet de survol */
+}
+
+/* Lien actif (lorsque l'élément est sélectionné) */
+.sidebar ul li a.active {
+  background-color: #2196f3;    /* Garde la couleur active du lien */
+  color: white;
+}
+
+/* Style pour les icônes dans la sidebar (si tu veux ajouter des icônes) */
+.sidebar ul li a mat-icon {
+  margin-right: 10px;           /* Espacement entre l'icône et le texte */
+  font-size: 18px;              /* Taille d'icône plus grande */
+  transition: transform 0.3s ease;
+}
+
+/* Effet de l'icône pendant le survol */
+.sidebar ul li a:hover mat-icon {
+  transform: translateX(5px);   /* Déplacement de l'icône vers la droite lors du survol */
+}
+
+/* Styles pour le bouton de fermeture (si tu en veux un) */
+.sidebar .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  color: #000000;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.sidebar .close-btn:hover {
+  transform: rotate(90deg);      /* Animation de rotation lors du survol */
+}
+
+/* Lorsque la sidebar est fermée, ajouter une ombre */
+.sidebar-closed {
+  box-shadow: none;             /* Supprimer l'ombre lorsque la sidebar est fermée */
+}
+
+/* Assurer que la sidebar ne dépasse pas le footer */
+.sidebar {
+  height: calc(100vh - 64px - 50px); /* Calcule la hauteur de la sidebar en enlevant la hauteur du header et du footer */
+}

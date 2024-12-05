@@ -1,0 +1,10 @@
+<div class="sidebar" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
+  <ul>
+    <li><a routerLink="/home" routerLinkActive="active">Accueil</a></li>
+    <li><a routerLink="/profile" routerLinkActive="active">Profil</a></li>
+
+    <!-- Lien Admin uniquement visible pour les admins -->
+    <li *ngIf="isAdmin"><a routerLink="/admin" routerLinkActive="active">Admin</a></li>
+
+  </ul>
+</div>

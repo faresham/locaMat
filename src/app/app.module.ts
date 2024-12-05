@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';  // Pour l'authentification
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';  // Pour Firestore
@@ -17,8 +19,14 @@ import { HeaderComponent } from './header/header.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 
+import { initializeApp } from 'firebase/app';
+import {getAuth} from 'firebase/auth';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { FooterComponent } from './footer/footer.component';
+
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, UserManagementComponent, SidebarComponent, FooterComponent],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
@@ -26,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule,
     AppRoutingModule,
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     MatInputModule,
     MatButtonModule,
@@ -35,4 +44,7 @@ import { MatIconModule } from '@angular/material/icon';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  // Initialiser Firebase
+
+}
