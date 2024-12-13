@@ -23,7 +23,7 @@
 .content {
   flex-grow: 1;
   padding: 20px;
-  transition: margin-left 0.3s ease;
+  transition: margin 0.3s ease;
   margin-top: 64px; /* Espace pour le header */
   overflow-y: auto; /* Permet de scroller si le contenu est trop long */
 }

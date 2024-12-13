@@ -1,1 +1,38 @@
-<p>home works!</p>
+<div class="home-container">
+  <h1 class="title">Appareils disponibles</h1>
+  <div class="search-container">
+    <input
+      type="text"
+      placeholder="Rechercher un appareil..."
+      [(ngModel)]="searchTerm"
+      (input)="filterDevices()"
+      class="search-input"
+    />
+  </div>
+
+  <div class="device-list">
+    <div class="device-item" *ngFor="let device of filteredDevices">
+      <div class="device-content">
+        <div class="device-info">
+          <h3 class="device-name">{{ device.name }}</h3>
+          <p class="device-details">
+            <strong>Version :</strong> {{ device.version }}
+          </p>
+          <p class="device-details">
+            <strong>Référence :</strong> {{ device.reference }}
+          </p>
+          <p class="device-details">
+            <strong>Numéro :</strong> {{ device.phoneNumber }}
+          </p>
+        </div>
+        <div class="device-image-container">
+          <img
+            [src]="device.photo"
+            alt="{{ device.name }}"
+            class="device-photo"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
