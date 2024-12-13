@@ -24,12 +24,12 @@ export class EditDeviceComponent implements OnInit {
 
   ngOnInit(): void {
     this.deviceId = this.route.snapshot.paramMap.get('id') || '';
-  
+
     // Obtenez l'UID de l'utilisateur connecté
-    const uid = this.authService.getCurrentUserUid(); // Une méthode pour récupérer l'UID
-  
-    // Vérifiez si l'utilisateur est administrateur
+    const uid = this.authService.getCurrentUserUid();
+
     if (uid) {
+      // Vérifiez si l'utilisateur est administrateur
       this.authService.isAdmin(uid).subscribe((isAdmin) => {
         this.isAdmin = isAdmin;
       });

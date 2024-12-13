@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../user/user.service'; // Assurez-vous d'avoir un modèle `User`
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -53,17 +54,17 @@ export class AuthService {
   }
 
   // 6. Vérifier si l'utilisateur a un rôle d'admin
-  // Cette fonction vérifie dans Firestore si l'utilisateur a un rôle 'admin'
   isAdmin(uid: string): Observable<boolean> {
-    // Implémentation pour vérifier si un utilisateur est administrateur
+    if (!uid) return of(false); // Si aucun UID, retournez false
     return this.firestore
-      .collection('users') // Supposez que vous avez une collection 'users'
+      .collection('users') // Supposez que la collection "users" contient les rôles
       .doc(uid)
       .valueChanges()
       .pipe(
-        map((user: any) => user?.role === 'administrateur') // Vérifiez si le rôle est 'admin'
+        map((user: any) => user?.role === 'admin') // Vérifiez si le rôle est "admin"
       );
   }
+
   getCurrentUserUid(): string | null {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     return user?.uid || null;
