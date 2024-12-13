@@ -9,7 +9,6 @@ export interface Device {
   photo: string;
   reference: string;
   version: string;
-  borrower?: string;
   createdAt: Date;
   updatedAt?: Date;
 }
