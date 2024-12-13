@@ -55,13 +55,19 @@ export class AuthService {
   // 6. Vérifier si l'utilisateur a un rôle d'admin
   // Cette fonction vérifie dans Firestore si l'utilisateur a un rôle 'admin'
   isAdmin(uid: string): Observable<boolean> {
-    return this.firestore.collection('users').doc<User>(uid).valueChanges().pipe(
-      map((user) => {
-        if (user) {
-          return user.role === 'Administrateur'; // Vérifie si l'utilisateur a un rôle 'admin'
-        }
-        return false; // Si l'utilisateur n'existe pas ou n'a pas de rôle, retourne false
-      })
-    );
+    // Implémentation pour vérifier si un utilisateur est administrateur
+    return this.firestore
+      .collection('users') // Supposez que vous avez une collection 'users'
+      .doc(uid)
+      .valueChanges()
+      .pipe(
+        map((user: any) => user?.role === 'administrateur') // Vérifiez si le rôle est 'admin'
+      );
   }
-}
+  getCurrentUserUid(): string | null {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user?.uid || null;
+  }
+  
+  }
+  

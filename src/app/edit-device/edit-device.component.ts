@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth/auth.service'; // Assurez-vous d'avoir un service d'authentification
 import { DeviceService } from '../services/device/device.service';
 
 @Component({
@@ -11,39 +12,42 @@ import { DeviceService } from '../services/device/device.service';
 export class EditDeviceComponent implements OnInit {
   deviceForm!: FormGroup;
   deviceId!: string;
+  isAdmin: boolean = false; // Ajoutez cette variable
 
   constructor(
     private fb: FormBuilder,
     private deviceService: DeviceService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService // Injectez un service pour vérifier le rôle
   ) {}
 
   ngOnInit(): void {
     this.deviceId = this.route.snapshot.paramMap.get('id') || '';
-    this.deviceService.getDeviceById(this.deviceId).subscribe((device) => {
-      if (device) {
-        this.deviceForm.patchValue(device);
-      }
-    });
+  
+    // Obtenez l'UID de l'utilisateur connecté
+    const uid = this.authService.getCurrentUserUid(); // Une méthode pour récupérer l'UID
+  
+    // Vérifiez si l'utilisateur est administrateur
+    if (uid) {
+      this.authService.isAdmin(uid).subscribe((isAdmin) => {
+        this.isAdmin = isAdmin;
+      });
+    }
 
-    this.deviceForm = this.fb.group({
-      name: ['', Validators.required],
-      reference: ['', Validators.required],
-      phoneNumber: [''], // Optionnel
-      photo: [''],       // Optionnel
-      version: ['', Validators.required]
-    });
   }
 
   updateDevice() {
     if (this.deviceForm.valid) {
-      this.deviceService.updateDevice(this.deviceId, this.deviceForm.value).then(() => {
+      const updatedDevice = this.deviceForm.value;
+      this.deviceService.updateDevice(this.deviceId, updatedDevice).then(() => {
         alert('Matériel modifié avec succès !');
-        this.router.navigate(['/']); // Retour à la liste des matériels
+        this.router.navigate(['/']); // Rediriger vers la liste
       }).catch((error) => {
-        console.error('Erreur lors de la mise à jour :', error);
+        console.error('Erreur lors de la modification du matériel :', error);
       });
+    } else {
+      alert('Veuillez remplir tous les champs obligatoires.');
     }
   }
 }

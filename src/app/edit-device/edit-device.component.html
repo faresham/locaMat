@@ -1,40 +1,45 @@
-<h1>Modifier un Matériel</h1>
-<form [formGroup]="deviceForm" (ngSubmit)="updateDevice()" class="device-form">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Nom</mat-label>
-    <input matInput formControlName="name" placeholder="Entrez le nom" required>
-    <mat-error *ngIf="deviceForm.get('name')?.hasError('required')">
-      Le nom est obligatoire.
-    </mat-error>
-  </mat-form-field>
+<div class="edit-container">
+  <h1 class="title">Modifier un Matériel</h1>
+  <form [formGroup]="deviceForm" (ngSubmit)="updateDevice()" class="device-form">
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="name" placeholder="Entrez le nom">
+      <mat-error *ngIf="deviceForm.get('name')?.hasError('required')">
+        Le nom est obligatoire.
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Référence</mat-label>
-    <input matInput formControlName="reference" placeholder="Entrez la référence" required>
-    <mat-error *ngIf="deviceForm.get('reference')?.hasError('required')">
-      La référence est obligatoire.
-    </mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Référence</mat-label>
+      <input matInput formControlName="reference" placeholder="Entrez la référence">
+      <mat-error *ngIf="deviceForm.get('reference')?.hasError('required')">
+        La référence est obligatoire.
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Numéro de téléphone (Optionnel)</mat-label>
-    <input matInput formControlName="phoneNumber" placeholder="Entrez le numéro">
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Numéro de téléphone (Optionnel)</mat-label>
+      <input matInput formControlName="phoneNumber" placeholder="Entrez le numéro">
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Lien de la photo (Optionnel)</mat-label>
-    <input matInput formControlName="photo" placeholder="Entrez le lien de la photo">
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Lien de la photo (Optionnel)</mat-label>
+      <input matInput formControlName="photo" placeholder="Entrez le lien de la photo">
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Version</mat-label>
-    <input matInput formControlName="version" placeholder="Entrez la version" required>
-    <mat-error *ngIf="deviceForm.get('version')?.hasError('required')">
-      La version est obligatoire.
-    </mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Version</mat-label>
+      <input matInput formControlName="version" placeholder="Entrez la version">
+      <mat-error *ngIf="deviceForm.get('version')?.hasError('required')">
+        La version est obligatoire.
+      </mat-error>
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="deviceForm.invalid">
-    Modifier
-  </button>
-</form>
+    <!-- Bouton Modifier : visible uniquement pour les administrateurs -->
+    <div class="button-container" *ngIf="isAdmin">
+      <button mat-raised-button color="primary" type="submit" [disabled]="deviceForm.invalid">
+        Enregistrer les modifications
+      </button>
+    </div>
+  </form>
+</div>
