@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DeviceService } from '../services/device/device.service';
 
 @Component({
   selector: 'app-add-device',
@@ -7,26 +8,37 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrls: ['./add-device.component.css']
 })
 export class AddDeviceComponent {
-  device = {
-    name: '',
-    reference: '',
-    phoneNumber: '',
-    photo: ''
-  };
+  deviceForm: FormGroup;
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private fb: FormBuilder, private deviceService: DeviceService) {
+    // Initialisation du formulaire réactif avec validation
+    this.deviceForm = this.fb.group({
+      name: ['', Validators.required],
+      reference: ['', Validators.required],
+      phoneNumber: [''], // Optionnel
+      photo: [''],       // Optionnel
+      version: ['', Validators.required]
+    });
+  }
 
   addDevice() {
-    this.firestore.collection('equipment').add({
-      ...this.device,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      version: 'V1.0'
-    }).then(() => {
-      alert('Matériel ajouté avec succès !');
-      this.device = { name: '', reference: '', phoneNumber: '', photo: '' }; // Réinitialiser le formulaire
-    }).catch((error) => {
-      console.error('Erreur lors de l\'ajout du matériel :', error);
-    });
+    if (this.deviceForm.valid) {
+      const device = {
+        ...this.deviceForm.value,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      this.deviceService.addDevice(device)
+        .then(() => {
+          alert('Matériel ajouté avec succès !');
+          this.deviceForm.reset(); // Réinitialiser le formulaire
+        })
+        .catch((error) => {
+          console.error('Erreur lors de l\'ajout du matériel :', error);
+        });
+    } else {
+      alert('Veuillez remplir tous les champs obligatoires.');
+    }
   }
 }

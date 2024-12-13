@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 export interface Device {
   id?: string;
   name: string;
-  phoneNumber: string;
-  photo: string;
+  phoneNumber?: string;
+  photo?: string;
   reference: string;
   version: string;
   borrower?: string;
@@ -38,13 +38,14 @@ export class DeviceService {
     return this.firestore.collection<Device>(this.collectionName).doc(id).set(deviceWithTimestamps);
   }
 
-  // Modifier un device
-  updateDevice(id: string, device: Partial<Device>): Promise<void> {
-    const deviceWithTimestamp = {
-      ...device,
-      updatedAt: new Date(),
-    };
-    return this.firestore.collection<Device>(this.collectionName).doc(id).update(deviceWithTimestamp);
+   // Méthode pour mettre à jour un matériel
+   updateDevice(id: string, device: Partial<Device>): Promise<void> {
+    return this.firestore.collection<Device>(this.collectionName).doc(id).update(device);
+  }
+
+  // Méthode pour obtenir un matériel par son ID
+  getDeviceById(id: string) {
+    return this.firestore.collection<Device>(this.collectionName).doc(id).valueChanges();
   }
 
   // Supprimer un device

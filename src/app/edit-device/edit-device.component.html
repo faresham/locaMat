@@ -1,5 +1,5 @@
-<h1>Ajouter un Matériel</h1>
-<form [formGroup]="deviceForm" (ngSubmit)="addDevice()" class="device-form">
+<h1>Modifier un Matériel</h1>
+<form [formGroup]="deviceForm" (ngSubmit)="updateDevice()" class="device-form">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Nom</mat-label>
     <input matInput formControlName="name" placeholder="Entrez le nom" required>
@@ -35,6 +35,6 @@
   </mat-form-field>
 
   <button mat-raised-button color="primary" type="submit" [disabled]="deviceForm.invalid">
-    Ajouter
+    Modifier
   </button>
 </form>
