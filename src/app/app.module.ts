@@ -19,8 +19,6 @@ import { HeaderComponent } from './header/header.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 
-import { initializeApp } from 'firebase/app';
-import {getAuth} from 'firebase/auth';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { AddDeviceComponent } from './add-device/add-device.component';
