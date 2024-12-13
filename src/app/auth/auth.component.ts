@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';  // Import de AngularFireAuth pour l'authentification
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -10,29 +10,32 @@ import { Router } from '@angular/router';
 export class AuthComponent {
   email: string = '';
   password: string = '';
-  errorMessage: string = '';
+  errorMessage: string = '';  // Ajout d'une propriété pour stocker les messages d'erreur
 
-  constructor(private afAuth: AngularFireAuth, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   // Fonction pour se connecter avec email et mot de passe
   async login() {
+    this.errorMessage = '';  // Réinitialiser le message d'erreur avant chaque tentative
     try {
-      const userCredential = await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
-      console.log('Connexion réussie', userCredential);
-      this.router.navigate(['/home']);
+      const userCredential = await this.auth.signIn(this.email, this.password);
+      if (userCredential) {
+        this.router.navigate(['/home']);
+      }
     } catch (error: any) {
-      this.errorMessage = error.message;
+      // En cas d'erreur, afficher un message approprié
+      this.errorMessage = error.message || 'Une erreur est survenue lors de la connexion.';
     }
   }
 
   // Fonction pour se déconnecter
   async logout() {
     try {
-      await this.afAuth.signOut();
-      console.log('Déconnexion réussie');
-      this.router.navigate(['/login']); // Rediriger vers la page de login après déconnexion
-    } catch (error) {
-      console.error('Erreur de déconnexion', error);
+      await this.auth.signOut();
+      this.router.navigate(['/login']);
+    } catch (error: any) {
+      // Gérer une erreur lors de la déconnexion si nécessaire
+      this.errorMessage = 'Une erreur est survenue lors de la déconnexion.';
     }
   }
 }

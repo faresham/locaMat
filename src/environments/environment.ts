@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyD5g6bAsKKjeS18A8DqSBEXQb26UvXZohc",
-    authDomain: "locamat-13cca.firebaseapp.com",
-    projectId: "locamat-13cca",
-    storageBucket: "locamat-13cca.firebasestorage.app",
-    messagingSenderId: "1048772629549",
-    appId: "1:1048772629549:web:6eb1b3b3c0173f0ba994a4"
+    apiKey: "AIzaSyBpMmvkEs0QmSOBY8GcMEYe0qz198zmYRY",
+    authDomain: "test-securite-marwanito.firebaseapp.com",
+    projectId: "test-securite-marwanito",
+    storageBucket: "test-securite-marwanito.firebasestorage.app",
+    messagingSenderId: "855539734466",
+    appId: "1:855539734466:web:d83dcfaddf2956e770285b"
   }
 };

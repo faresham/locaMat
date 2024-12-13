@@ -1,0 +1,38 @@
+/* Fixer le header en haut de la page */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f9f9f9; /* Couleur de fond du header */
+  color: #000000;
+  padding: 10px 20px;
+  z-index: 1000; /* Pour qu'il soit au-dessus des autres éléments */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Information de l'utilisateur (si connecté) */
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info span {
+  margin-right: 10px; /* Espacement entre le nom et les boutons */
+}
+
+mat-icon-button {
+  margin-left: 10px; /* Espacement entre les boutons */
+}
+
+/* Spacer pour gérer l'espacement entre le titre et les informations utilisateur */
+.spacer {
+  flex-grow: 1;
+}
+
+/* Espacement pour que le body ne soit pas caché sous le header */
+body {
+  padding-top: 64px; /* Hauteur approximative du header */
+}

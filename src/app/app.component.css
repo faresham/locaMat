@@ -1,0 +1,51 @@
+/* Structure principale */
+.layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Le Header fixe en haut */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* Gestion du contenu qui prend toute la place disponible */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  margin-top: 64px; /* Espace pour le header */
+  overflow-y: auto; /* Permet de scroller si le contenu est trop long */
+}
+
+/* Effet de la sidebar ouverte ou fermée */
+.sidebar-open .content {
+  margin-left: 250px; /* Décalage pour la sidebar ouverte */
+}
+
+.sidebar-closed .content {
+  margin-left: 0; /* Pas de décalage pour la sidebar fermée */
+}
+
+/* Fixer le footer en bas de la page */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f9f9f9;
+  color: #000;
+  padding: 10px;
+  text-align: center;
+  z-index: 1000;
+}
