@@ -2,6 +2,8 @@
   <ul>
     <li><a routerLink="/home" routerLinkActive="active">Accueil</a></li>
     <li><a routerLink="/profile" routerLinkActive="active">Profil</a></li>
+    <li><a routerLink="/add_device" routerLinkActive="active">Ajouter matériel</a></li>
+
 
     <!-- Lien Admin uniquement visible pour les admins -->
     <li *ngIf="isAdmin"><a routerLink="/admin" routerLinkActive="active">Admin</a></li>

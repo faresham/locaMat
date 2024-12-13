@@ -23,9 +23,10 @@ import { initializeApp } from 'firebase/app';
 import {getAuth} from 'firebase/auth';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
+import { AddDeviceComponent } from './add-device/add-device.component';
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, AddDeviceComponent],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
