@@ -67,4 +67,27 @@
       </div>
     </div>
   </div>
+<<<<<<< HEAD
   
+=======
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="selectedDevice">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>{{ selectedDevice.name || 'Détails de l’appareil' }}</h2>
+      <div class="modal-body">
+        <img
+          [src]="selectedDevice.photo || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'"
+          alt="{{ selectedDevice.name || 'Image indisponible' }}"
+          class="modal-photo"
+        />
+        <p><strong>Version :</strong> {{ selectedDevice.version || 'N/D' }}</p>
+        <p><strong>Référence :</strong> {{ selectedDevice.reference || 'N/D' }}</p>
+        <p><strong>Numéro :</strong> {{ selectedDevice.phoneNumber || 'N/D' }}</p>
+      </div>
+      <button class="reserve-btn" (click)="reserveDevice()">Réserver</button>
+    </div>
+  </div>
+</div>
+>>>>>>> master
