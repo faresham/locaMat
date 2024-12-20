@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 
 export interface Reservation {
+  id?: string;
   borrowStartDate: Date;
   borrowEndDate: Date;
   createdAt: Date;
@@ -27,15 +28,24 @@ export class ReservationService {
   }
 
   // Ajouter une réservation
-  addReservation(reservation: Omit<Reservation, 'id'>): Promise<void> {
-    const id = this.firestore.createId();
+  addReservation(reservation: Reservation): Promise<void> {
+    const id = this.firestore.createId(); // Générer un nouvel ID Firestore
     return this.firestore
       .collection<Reservation>(this.collectionName)
       .doc(id)
       .set({
         ...reservation,
-        createdAt: new Date(),
+        createdAt: new Date(), // Ajouter l'horodatage
         updatedAt: new Date(),
       });
+  }
+
+  // Récupérer les réservations d'un appareil spécifique
+  getReservationsByDeviceId(deviceId: string): Observable<Reservation[]> {
+    return this.firestore
+      .collection<Reservation>(this.collectionName, (ref) =>
+        ref.where('deviceId', '==', deviceId)
+      )
+      .valueChanges({ idField: 'id' });
   }
 }

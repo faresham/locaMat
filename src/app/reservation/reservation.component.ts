@@ -10,7 +10,7 @@ import { DeviceService, Device } from '../services/device/device.service';
 })
 export class ReservationComponent implements OnInit {
   deviceId: string = '';
-  deviceDetails: Device | null = null; // Stocker les informations de l'appareil
+  deviceDetails: Device | null = null;
   borrowStartDate: Date | null = null;
   borrowEndDate: Date | null = null;
 
@@ -18,41 +18,34 @@ export class ReservationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
-    private deviceService: DeviceService // Injecter le service des appareils
+    private deviceService: DeviceService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.deviceId = params['deviceId'];
-      this.fetchDeviceDetails(); // Charger les détails de l'appareil
+      this.fetchDeviceDetails();
     });
   }
 
   fetchDeviceDetails(): void {
-    if (!this.deviceId) {
-      return;
-    }
+    if (!this.deviceId) return;
 
-    this.deviceService.getDeviceById(this.deviceId).subscribe(
-      (device) => {
-        this.deviceDetails = device;
-      },
-      (error) => {
-        console.error('Erreur lors du chargement des détails de l’appareil :', error);
-      }
-    );
+    this.deviceService.getDeviceById(this.deviceId).subscribe((device) => {
+      this.deviceDetails = device;
+    });
   }
 
   confirmReservation(): void {
     if (!this.borrowStartDate || !this.borrowEndDate) {
-      alert('Veuillez saisir une plage de dates valide.');
+      alert('Veuillez sélectionner des dates valides.');
       return;
     }
 
-    const reservation: Omit<Reservation, 'id'> = {
+    const reservation: Reservation = {
       borrowStartDate: this.borrowStartDate,
       borrowEndDate: this.borrowEndDate,
-      user: 'currentUserId', // Remplace par l'utilisateur connecté
+      user: 'currentUserId', // Remplacez par l'utilisateur connecté
       deviceId: this.deviceId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -61,7 +54,7 @@ export class ReservationComponent implements OnInit {
     this.reservationService.addReservation(reservation).then(
       () => {
         alert('Réservation confirmée !');
-        this.router.navigate(['/home']); // Retourne à la page principale
+        this.router.navigate(['/']); // Retourne à la page principale
       },
       (error) => {
         console.error('Erreur lors de la réservation :', error);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceService, Device } from '../services/device/device.service';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
+import {AuthService} from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,11 @@ export class HomeComponent implements OnInit {
     this.filteredDevices = this.devices.filter((device) =>
       device.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  //
+  getReservationsForDevice(deviceId: string): Reservation[] {
+    return this.reservations.filter((reservation) => reservation.deviceId === deviceId);
   }
 
   // Vérifier si un appareil est réservé

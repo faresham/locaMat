@@ -26,6 +26,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import { ReservationComponent } from './reservation/reservation.component';
 
+import { LOCALE_ID } from '@angular/core';
+import {registerLocaleData} from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+
+registerLocaleData(localeFr, 'fr');
+
 @NgModule({
   declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, ReservationComponent],
   imports: [
@@ -45,7 +52,7 @@ import { ReservationComponent } from './reservation/reservation.component';
     MatFormFieldModule,
     MatNativeDateModule,
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: 'fr' }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
