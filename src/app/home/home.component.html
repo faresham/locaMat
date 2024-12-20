@@ -14,24 +14,19 @@
     <div
       class="device-item"
       *ngFor="let device of filteredDevices"
-      (click)="openModal(device)"
+      [class.disabled]="isDeviceReserved(device.id!)"
+      (click)="!isDeviceReserved(device.id!) && openModal(device)"
     >
       <div class="device-content">
         <div class="device-info">
           <h3 class="device-name">{{ device.name || 'N/D' }}</h3>
-          <p class="device-details">
-            <strong>Version :</strong> {{ device.version || 'N/D' }}
-          </p>
-          <p class="device-details">
-            <strong>Référence :</strong> {{ device.reference || 'N/D' }}
-          </p>
-          <p class="device-details">
-            <strong>Numéro :</strong> {{ device.phoneNumber || 'N/D' }}
-          </p>
+          <p class="device-details"><strong>Version :</strong> {{ device.version || 'N/D' }}</p>
+          <p class="device-details"><strong>Référence :</strong> {{ device.reference || 'N/D' }}</p>
+          <p class="device-details"><strong>Numéro :</strong> {{ device.phoneNumber || 'N/D' }}</p>
         </div>
         <div class="device-image-container">
           <img
-            [src]="device.photo || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'"
+            [src]="device.photo || 'https://th.bing.com/th/id/OIP.hTQHlnEVJc6lMKqO49vcfAAAAA?rs=1&pid=ImgDetMain'"
             alt="{{ device.name || 'Image indisponible' }}"
             class="device-photo"
           />
@@ -41,21 +36,34 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal" *ngIf="selectedDevice">
-    <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
-      <h2>{{ selectedDevice.name || 'Détails de l’appareil' }}</h2>
+  <div class="modal" *ngIf="selectedDevice" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <!-- Nom de l'appareil -->
+      <h2 class="modal-title">{{ selectedDevice.name || 'Détails de l’appareil' }}</h2>
+
+      <!-- Image au centre -->
+      <img
+        [src]="selectedDevice.photo || 'https://th.bing.com/th/id/OIP.hTQHlnEVJc6lMKqO49vcfAAAAA?rs=1&pid=ImgDetMain'"
+        alt="{{ selectedDevice.name || 'Image indisponible' }}"
+        class="modal-photo"
+      />
+
+      <!-- Cases avec les détails -->
       <div class="modal-body">
-        <img
-          [src]="selectedDevice.photo || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'"
-          alt="{{ selectedDevice.name || 'Image indisponible' }}"
-          class="modal-photo"
-        />
-        <p><strong>Version :</strong> {{ selectedDevice.version || 'N/D' }}</p>
-        <p><strong>Référence :</strong> {{ selectedDevice.reference || 'N/D' }}</p>
-        <p><strong>Numéro :</strong> {{ selectedDevice.phoneNumber || 'N/D' }}</p>
+        <div class="modal-case">
+          <p><strong>Version :</strong> {{ selectedDevice.version || 'N/D' }}</p>
+        </div>
+        <div class="modal-case">
+          <p><strong>Référence :</strong> {{ selectedDevice.reference || 'N/D' }}</p>
+        </div>
+        <div class="modal-case">
+          <p><strong>Numéro :</strong> {{ selectedDevice.phoneNumber || 'N/D' }}</p>
+        </div>
       </div>
-      <button class="reserve-btn" (click)="reserveDevice()">Réserver</button>
+
+      <!-- Bouton Réserver -->
+      <button class="reserve-btn" (click)="navigateToReservation(selectedDevice.id!)">Réserver</button>
     </div>
   </div>
 </div>

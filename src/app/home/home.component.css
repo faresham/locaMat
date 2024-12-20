@@ -1,5 +1,5 @@
 .home-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -30,9 +30,9 @@
 }
 
 .device-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr; /* Un appareil par ligne */
+  gap: 20px; /* Espace entre les appareils */
 }
 
 .device-item {
@@ -49,6 +49,11 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+.device-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .device-content {
   display: flex;
   justify-content: space-between;
@@ -60,24 +65,14 @@
 }
 
 .device-name {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
 .device-details {
-  font-size: 14px;
-  color: #666;
-  margin: 5px 0;
-}
-
-.device-details strong {
-  color: #333;
-}
-
-.device-image-container {
-  text-align: center;
-  flex-shrink: 0;
+  font-size: 16px;
+  color: #7f8c8d;
 }
 
 .device-photo {
@@ -87,7 +82,6 @@
   object-fit: cover;
 }
 
-/* Modal Styling */
 .modal {
   position: fixed;
   top: 0;
@@ -104,41 +98,49 @@
 .modal-content {
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 500px;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.modal-body {
-  text-align: center;
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
 }
 
 .modal-photo {
-  max-width: 150px;
-  height: auto;
-  margin-bottom: 20px;
-  border-radius: 4px;
+  width: 150px;
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
+.modal-body {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.modal-case {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
 }
 
 .reserve-btn {
   background-color: #007bff;
   color: white;
-  border: none;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .reserve-btn:hover {
