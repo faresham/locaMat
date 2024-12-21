@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DeviceService, Device } from '../services/device/device.service';
-import { ReservationService } from '../services/reservation/reservation.service';
+import { ReservationService, Reservation } from '../services/reservation/reservation.service';
+import {AuthService} from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,59 +11,61 @@ import { ReservationService } from '../services/reservation/reservation.service'
 })
 export class HomeComponent implements OnInit {
   devices: Device[] = [];
+  reservations: Reservation[] = [];
   filteredDevices: Device[] = [];
   searchTerm: string = '';
   selectedDevice: Device | null = null;
 
   constructor(
     private deviceService: DeviceService,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.deviceService.getDevices().subscribe((data: Device[]) => {
-      this.devices = data;
-      this.filteredDevices = data;
+    // Charger les appareils
+    this.deviceService.getDevices().subscribe((devices: Device[]) => {
+      this.devices = devices;
+      this.filteredDevices = devices;
+    });
+
+    // Charger les réservations
+    this.reservationService.getReservations().subscribe((reservations: Reservation[]) => {
+      this.reservations = reservations;
     });
   }
 
+  // Filtrer les appareils en fonction du champ de recherche
   filterDevices(): void {
     this.filteredDevices = this.devices.filter((device) =>
       device.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
+  //
+  getReservationsForDevice(deviceId: string): Reservation[] {
+    return this.reservations.filter((reservation) => reservation.deviceId === deviceId);
+  }
+
+  // Vérifier si un appareil est réservé
+  isDeviceReserved(deviceId: string): boolean {
+    return this.reservations.some(
+      (reservation) => reservation.deviceId === deviceId
+    );
+  }
+
+  // Ouvrir la modal pour un appareil donné
   openModal(device: Device): void {
     this.selectedDevice = device;
   }
 
+  // Fermer la modal
   closeModal(): void {
     this.selectedDevice = null;
   }
 
-  reserveDevice(): void {
-    if (!this.selectedDevice || !this.selectedDevice.id) {
-      alert('Erreur : L\'ID de l\'appareil est introuvable.');
-      return;
-    }
-
-    const reservation = {
-      borrowStartDate: new Date(),
-      borrowEndDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-      user: 'currentUserId', // Remplace par l'utilisateur connecté
-      deviceId: this.selectedDevice.id, // Passe uniquement l'ID de l'appareil
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    this.reservationService.addReservation(reservation).then(
-      () => {
-        alert('Réservation réussie !');
-        this.closeModal();
-      },
-      () => {
-        alert('Erreur lors de la réservation.');
-      }
-    );
+  // Naviguer vers la page de réservation
+  navigateToReservation(deviceId: string): void {
+    this.router.navigate(['/reservation'], { queryParams: { deviceId } });
   }
 }

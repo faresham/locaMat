@@ -19,7 +19,7 @@
   z-index: 1000;
 }
 
-/* Gestion du contenu qui prend toute la place disponible */
+/* Gestion du contenu principal */
 .content {
   flex-grow: 1;
   padding: 20px;
@@ -35,6 +35,11 @@
 
 .sidebar-closed .content {
   margin-left: 0; /* Pas de décalage pour la sidebar fermée */
+}
+
+/* Mise en page sans sidebar */
+.no-sidebar .content {
+  margin-left: 0; /* Pas de décalage */
 }
 
 /* Fixer le footer en bas de la page */

@@ -1,0 +1,38 @@
+<div class="reservation-container">
+  <h1>Réserver un appareil</h1>
+
+  <!-- Détails de l'appareil -->
+  <div *ngIf="deviceDetails" class="device-details">
+    <img
+      [src]="deviceDetails.photo || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'"
+      alt="{{ deviceDetails.name || 'Image indisponible' }}"
+      class="device-photo"
+    />
+    <h2>{{ deviceDetails.name || 'Nom de l’appareil' }}</h2>
+    <p><strong>Version :</strong> {{ deviceDetails.version || 'N/D' }}</p>
+    <p><strong>Référence :</strong> {{ deviceDetails.reference || 'N/D' }}</p>
+    <p><strong>Numéro :</strong> {{ deviceDetails.phoneNumber || 'N/D' }}</p>
+  </div>
+
+  <!-- Formulaire pour les dates -->
+  <form (ngSubmit)="confirmReservation()" class="reservation-form">
+    <mat-form-field appearance="fill" class="date-field">
+      <mat-label>Date de début</mat-label>
+      <input matInput [matDatepicker]="startPicker" [(ngModel)]="borrowStartDate" name="borrowStartDate" required />
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker startView="month" panelClass="custom-datepicker"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="date-field">
+      <mat-label>Date de fin</mat-label>
+      <input matInput [matDatepicker]="endPicker" [(ngModel)]="borrowEndDate" name="borrowEndDate" required />
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker startView="month" panelClass="custom-datepicker"></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Bouton -->
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit">Confirmer la réservation</button>
+    </div>
+  </form>
+</div>

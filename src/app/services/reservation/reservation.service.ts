@@ -3,19 +3,20 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 
 export interface Reservation {
+  id?: string;
   borrowStartDate: Date;
   borrowEndDate: Date;
   createdAt: Date;
   updatedAt: Date;
   user: string;
-  deviceId: string; // L'ID de l'appareil
+  deviceId: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
-  private collectionName = 'borrowedItem';
+  private collectionName = 'reservations';
 
   constructor(private firestore: AngularFirestore) {}
 
@@ -23,18 +24,28 @@ export class ReservationService {
   getReservations(): Observable<Reservation[]> {
     return this.firestore
       .collection<Reservation>(this.collectionName)
-      .valueChanges();
+      .valueChanges({ idField: 'id' });
   }
 
   // Ajouter une réservation
-  addReservation(reservation: Omit<Reservation, 'id'>): Promise<void> {
-    const id = this.firestore.createId(); // Générer un nouvel ID
-    const reservationWithId = {
-      ...reservation,
-    };
+  addReservation(reservation: Reservation): Promise<void> {
+    const id = this.firestore.createId(); // Générer un nouvel ID Firestore
     return this.firestore
       .collection<Reservation>(this.collectionName)
       .doc(id)
-      .set(reservationWithId);
+      .set({
+        ...reservation,
+        createdAt: new Date(), // Ajouter l'horodatage
+        updatedAt: new Date(),
+      });
+  }
+
+  // Récupérer les réservations d'un appareil spécifique
+  getReservationsByDeviceId(deviceId: string): Observable<Reservation[]> {
+    return this.firestore
+      .collection<Reservation>(this.collectionName, (ref) =>
+        ref.where('deviceId', '==', deviceId)
+      )
+      .valueChanges({ idField: 'id' });
   }
 }
