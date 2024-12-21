@@ -25,6 +25,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import { ReservationComponent } from './reservation/reservation.component';
+import { AddDeviceComponent } from './add-device/add-device.component';
 
 import { LOCALE_ID } from '@angular/core';
 import {registerLocaleData} from '@angular/common';
@@ -34,7 +35,8 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, ReservationComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, ReservationComponent, AddDeviceComponent],
+  
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
     AngularFireAuthModule,  // Pour l'authentification
