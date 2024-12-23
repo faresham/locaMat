@@ -31,9 +31,10 @@ export class ReservationComponent implements OnInit {
   fetchDeviceDetails(): void {
     if (!this.deviceId) return;
 
-    this.deviceService.getDeviceById(this.deviceId).subscribe((device) => {
+    /*this.deviceService.getDeviceById(this.deviceId).subscribe((device) => {
       this.deviceDetails = device;
     });
+     */
   }
 
   confirmReservation(): void {

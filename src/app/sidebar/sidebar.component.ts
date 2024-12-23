@@ -13,13 +13,9 @@ export class SidebarComponent {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    // Vérifier si l'utilisateur est un administrateur
-    this.authService.getCurrentUser().subscribe(user => {
-      if (user) {
-        this.authService.isAdmin(user.uid).subscribe(isAdmin => {
-          this.isAdmin = isAdmin; // Mettre à jour l'état de l'utilisateur (admin ou non)
-        });
-      }
+    // Vérifier si l'utilisateur est administrateur
+    this.authService.isAdmin().subscribe((isAdmin) => {
+      this.isAdmin = isAdmin; // Met à jour la variable locale
     });
   }
 }

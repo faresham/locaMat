@@ -1,0 +1,105 @@
+<div class="add-device-container">
+  <h1>{{ isEditMode ? 'Modifier un Matériel' : 'Ajouter un Matériel' }}</h1>
+
+  <!-- Aperçu de l'image -->
+  <div class="image-preview-container">
+    <img
+      [src]="device.photo?.trim() ? device.photo : 'https://th.bing.com/th/id/OIP.hTQHlnEVJc6lMKqO49vcfAAAAA?rs=1&pid=ImgDetMain'"
+      alt="Aperçu de l'image"
+    />
+  </div>
+
+  <form (ngSubmit)="submitDevice()" #deviceForm="ngForm" class="device-form">
+    <!-- Nom -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Nom</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="device.name"
+        name="name"
+        #name="ngModel"
+        required
+        maxlength="30"
+      />
+      <mat-error *ngIf="name.invalid && name.touched">Le nom est obligatoire (1-30 caractères).</mat-error>
+    </mat-form-field>
+
+    <!-- Référence -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Référence</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="device.reference"
+        name="reference"
+        #reference="ngModel"
+        required
+        pattern="^(AN|AP|XX)\d{3}$"
+      />
+      <mat-error *ngIf="reference.invalid && reference.touched">
+        La référence doit commencer par "AN", "AP", ou "XX", suivi de 3 chiffres.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Version -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Version</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="device.version"
+        name="version"
+        #version="ngModel"
+        required
+        minlength="3"
+        maxlength="15"
+      />
+      <mat-error *ngIf="version.invalid && version.touched">La version est obligatoire (3-15 caractères).</mat-error>
+    </mat-form-field>
+
+    <!-- Numéro de téléphone (facultatif) -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Numéro de téléphone</mat-label>
+      <input
+        matInput
+        type="tel"
+        [(ngModel)]="device.phoneNumber"
+        name="phoneNumber"
+        #phoneNumber="ngModel"
+        pattern="^\d{10}$"
+      />
+      <mat-error *ngIf="phoneNumber.invalid && phoneNumber.touched">
+        Le numéro doit contenir exactement 10 chiffres.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Lien de la photo -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Lien de la photo</mat-label>
+      <input matInput type="url" [(ngModel)]="device.photo" name="photo" />
+    </mat-form-field>
+
+    <!-- Stock -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Stock</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="device.stock"
+        name="stock"
+        #stock="ngModel"
+        required
+        min="0"
+      />
+      <mat-error *ngIf="stock?.invalid && stock?.touched">Le stock doit être un nombre positif.</mat-error>
+    </mat-form-field>
+
+    <!-- Bouton -->
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="deviceForm.invalid">
+        {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+      </button>
+    </div>
+  </form>
+</div>
