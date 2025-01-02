@@ -21,8 +21,7 @@
     <div
       class="device-item"
       *ngFor="let device of filteredDevices"
-      [class.disabled]="isDeviceReserved(device.id!)"
-      (click)="!isDeviceReserved(device.id!) && openModal(device)"
+      (click)="openModal(device)"
     >
       <div class="device-content">
         <!-- Informations principales -->
@@ -57,6 +56,15 @@
           class="modal-photo"
         />
       </div>
+      <div class="modal-dispo">
+        <span class="availability available" *ngIf="nextAvailableDate === 'Disponible'">
+          Disponible
+        </span>
+        <span class="availability unavailable" *ngIf="nextAvailableDate !== 'Disponible'">
+          Disponible à partir du {{ nextAvailableDate | date: 'longDate' }}
+        </span>
+      </div>
+
 
       <!-- Détails de l'appareil -->
       <div class="modal-details">
@@ -66,23 +74,6 @@
         <div class="modal-case">
           <p><strong>Référence : </strong> <span>{{ selectedDevice.reference || 'N/D' }}</span></p>
         </div>
-        <div class="modal-case">
-          <p><strong>Numéro de téléphone : </strong> <span>{{ selectedDevice.phoneNumber || 'N/D' }}</span></p>
-        </div>
-        <div class="modal-case">
-          <p><strong>Stock disponible : </strong> <span>{{ selectedDevice.stock || 'N/D' }}</span></p>
-        </div>
-
-      <!-- Réservations associées -->
-      <div class="modal-reservations" *ngIf="getReservationsForDevice(selectedDevice.id!).length > 0">
-        <h4>Réservations :</h4>
-        <ul>
-          <li *ngFor="let reservation of getReservationsForDevice(selectedDevice.id!)">
-            <strong>{{ reservation.user || 'Utilisateur inconnu' }}</strong> :
-            {{ reservation.borrowStartDate | date: 'short' }} -
-            {{ reservation.borrowEndDate | date: 'short' }}
-          </li>
-        </ul>
       </div>
 
       <!-- Boutons -->

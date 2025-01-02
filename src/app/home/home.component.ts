@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceService, Device } from '../services/device/device.service';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
-import {AuthService} from '../services/auth/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,13 +10,13 @@ import {AuthService} from '../services/auth/auth.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  devices: Device[] = []; // Liste complète des appareils
-  reservations: Reservation[] = []; // Liste complète des réservations
-  filteredDevices: Device[] = []; // Appareils filtrés en fonction de la recherche
-  searchTerm: string = ''; // Terme de recherche
-  selectedDevice: Device | null = null; // Appareil actuellement sélectionné
-  isAdmin: boolean = false; // Par défaut, l'utilisateur n'est pas administrateur
-
+  devices: Device[] = [];
+  reservations: Reservation[] = [];
+  nextAvailableDate: any | null = null;
+  filteredDevices: Device[] = [];
+  searchTerm: string = '';
+  selectedDevice: Device | null = null;
+  isAdmin: boolean = false;
 
   constructor(
     private deviceService: DeviceService,
@@ -26,24 +26,44 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Charger la liste des appareils
-    this.deviceService.getDevices().subscribe((devices: Device[]) => {
+    this.loadDevicesAndReservations();
+    this.authService.isAdmin().subscribe((isAdmin) => {
+      this.isAdmin = isAdmin;
+    });
+  }
+
+  private loadDevicesAndReservations(): void {
+    this.deviceService.getDevices().subscribe((devices) => {
       this.devices = devices;
       this.filteredDevices = devices;
     });
 
-    // Charger les réservations
-    this.reservationService.getReservations().subscribe((reservations: Reservation[]) => {
+    this.reservationService.getReservations().subscribe((reservations) => {
       this.reservations = reservations;
-    });
-
-    // Vérifier si l'utilisateur est administrateur
-    this.authService.isAdmin().subscribe((isAdmin) => {
-      this.isAdmin = isAdmin; // Met à jour la variable locale
     });
   }
 
-  // Filtrer les appareils en fonction du champ de recherche
+  getReservationsForDevice(deviceId: string): Reservation[] {
+    return this.reservations.filter((reservation) => reservation.deviceId === deviceId);
+  }
+
+  getNextAvailableDateForDevice(deviceId: string): string {
+    const reservations = this.getReservationsForDevice(deviceId);
+
+    if (reservations.length > 0) {
+      const sortedReservations = reservations
+        .map((res) => res.borrowEndDate)
+        .sort((a, b) => a.getTime() - b.getTime());
+
+      const lastEndDate = sortedReservations[sortedReservations.length - 1];
+      const nextAvailableDate = new Date(lastEndDate.getTime() + 24 * 60 * 60 * 1000);
+      return nextAvailableDate.toLocaleDateString();
+    }
+
+    return 'Disponible'; // Si aucune réservation, immédiatement disponible
+  }
+
+
   filterDevices(): void {
     const search = this.searchTerm.toLowerCase();
     this.filteredDevices = this.devices.filter((device) =>
@@ -53,38 +73,24 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  // Effacer la recherche
   clearSearch(): void {
     this.searchTerm = '';
-    this.filteredDevices = [...this.devices]; // Réinitialiser la liste complète
+    this.filteredDevices = [...this.devices];
   }
 
-  // Récupérer les réservations pour un appareil donné
-  getReservationsForDevice(deviceId: string): Reservation[] {
-    return this.reservations.filter((reservation) => reservation.deviceId === deviceId);
-  }
-
-  // Vérifier si un appareil est réservé
-  isDeviceReserved(deviceId: string): boolean {
-    return this.reservations.some((reservation) => reservation.deviceId === deviceId);
-  }
-
-  // Ouvrir la modal pour un appareil donné
   openModal(device: Device): void {
     this.selectedDevice = device;
+    this.nextAvailableDate = this.getNextAvailableDateForDevice(device.id!);
   }
 
-  // Fermer la modal
   closeModal(): void {
     this.selectedDevice = null;
   }
 
-  // Naviguer vers la page de réservation
   navigateToReservation(deviceId: string): void {
     this.router.navigate(['/reservation'], { queryParams: { deviceId } });
   }
 
-  // Naviguer vers la page de modification
   navigateToEditDevice(deviceId: string): void {
     this.router.navigate(['/edit-device', deviceId]);
   }

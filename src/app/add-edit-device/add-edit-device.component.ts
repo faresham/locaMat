@@ -4,17 +4,16 @@ import { DeviceService, Device } from '../services/device/device.service';
 
 @Component({
   selector: 'app-add-edit-device',
-  templateUrl: './add-device.component.html',
-  styleUrls: ['./add-device.component.css'],
+  templateUrl: './add-edit-device.component.html',
+  styleUrls: ['./add-edit-device.component.css'],
 })
-export class AddDeviceComponent implements OnInit {
+export class AddEditDeviceComponent implements OnInit {
   device: Partial<Device> = {
     name: '',
     reference: '',
     version: '',
     phoneNumber: '',
     photo: '',
-    stock: 0,
   };
   isEditMode = false; // Détecte si nous sommes en mode modification
   isSubmitting = false;

@@ -10,7 +10,6 @@ export interface Device {
   version: string; // Version du matériel
   phoneNumber?: string; // Numéro de téléphone associé (facultatif)
   photo?: string; // Lien vers la photo (facultatif)
-  stock: number; // Quantité en stock
   createdAt: Date; // Date de création
   updatedAt?: Date; // Dernière mise à jour
 }
@@ -103,11 +102,6 @@ export class DeviceService {
     // Validation du numéro de téléphone (facultatif)
     if (device.phoneNumber && !/^\d{10}$/.test(device.phoneNumber)) {
       throw new Error("Le champ 'Numéro de téléphone' doit contenir exactement 10 chiffres.");
-    }
-
-    // Validation du stock
-    if (!isUpdate && device.stock < 0) {
-      throw new Error("Le champ 'Stock' doit être un nombre positif.");
     }
   }
 }

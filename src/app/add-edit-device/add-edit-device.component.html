@@ -80,21 +80,6 @@
       <input matInput type="url" [(ngModel)]="device.photo" name="photo" />
     </mat-form-field>
 
-    <!-- Stock -->
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>Stock</mat-label>
-      <input
-        matInput
-        type="number"
-        [(ngModel)]="device.stock"
-        name="stock"
-        #stock="ngModel"
-        required
-        min="0"
-      />
-      <mat-error *ngIf="stock?.invalid && stock?.touched">Le stock doit être un nombre positif.</mat-error>
-    </mat-form-field>
-
     <!-- Bouton -->
     <div class="button-container">
       <button mat-raised-button color="primary" type="submit" [disabled]="deviceForm.invalid">

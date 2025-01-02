@@ -142,23 +142,6 @@
   color: #333;
 }
 
-.modal-reservations h4 {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #333;
-}
-
-.modal-reservations ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.modal-reservations li {
-  margin: 5px 0;
-  color: #555;
-}
-
 /* Conteneur des boutons */
 .modal-buttons {
   display: flex;
@@ -195,4 +178,25 @@
 
 .edit-btn:hover {
   background-color: #218838;
+}
+
+.modal-dispo {
+  margin-bottom: 20px;
+}
+
+.availability {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.available {
+  color: #28a745;
+  background-color: #e6f4ea;
+}
+
+.unavailable {
+  color: #d9534f; /* Rouge pour non disponible */
+  background-color: #fbe3e3;
 }
