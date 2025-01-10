@@ -59,7 +59,7 @@ export class AuthService {
       switchMap((user) => {
         if (user && user.uid) {
           return this.firestore.collection('users').doc<User>(user.uid).valueChanges().pipe(
-            map((userData) => userData?.role === 'Administrateur' || false)
+            map((userData) => userData?.isAdmin || false) // Vérifie directement si isAdmin est vrai
           );
         }
         return of(false); // Retourne false si aucun utilisateur connecté

@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 
 export interface User {
   id: string;
-  firstName: string;
-  lastName: string;
+  nom: string;
+  prenom: string;
   email: string;
-  role: 'Administrateur' | 'Emprunteur';
+  isAdmin: boolean;
   matricule: string;
 }
 

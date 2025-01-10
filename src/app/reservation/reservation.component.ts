@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { DeviceService, Device } from '../services/device/device.service';
-import { AuthService } from '../services/auth/auth.service';
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-reservation',
@@ -14,28 +14,21 @@ export class ReservationComponent implements OnInit {
   deviceDetails: Device | null = null;
   borrowStartDate: Date | null = null;
   borrowEndDate: Date | null = null;
-  reservations: Reservation[] = [];
-  currentUserId: string | null = null;
-  nextAvailableDate: Date | null = null;
+  reservedDates: string[] = []; // Liste des dates réservées sous format YYYY-MM-DD
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
-    private deviceService: DeviceService,
-    private authService: AuthService
+    private deviceService: DeviceService
   ) {}
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe((user) => {
-      this.currentUserId = user?.uid || null;
-    });
-
     this.route.queryParams.subscribe((params) => {
       this.deviceId = params['deviceId'];
       if (this.deviceId) {
         this.fetchDeviceDetails();
-        this.fetchReservations();
+        this.fetchReservedDates();
       }
     });
   }
@@ -46,46 +39,45 @@ export class ReservationComponent implements OnInit {
     });
   }
 
-  fetchReservations(): void {
-    this.reservationService.getReservationsByDeviceId(this.deviceId).subscribe((reservations) => {
-      this.reservations = reservations;
-      this.fetchNextAvailableDate();
+  fetchReservedDates(): void {
+    this.reservationService.getReservationsByDeviceId(this.deviceId).subscribe((reservations: Reservation[]) => {
+      this.reservedDates = reservations.flatMap((reservation) => {
+        const start = new Date(reservation.borrowStartDate);
+        const end = new Date(reservation.borrowEndDate);
+        const dates: string[] = [];
+
+        // Générer toutes les dates entre start et end
+        while (start <= end) {
+          dates.push(start.toISOString().split('T')[0]); // Format YYYY-MM-DD
+          start.setDate(start.getDate() + 1);
+        }
+
+        return dates;
+      });
+
+      console.log('Dates réservées :', this.reservedDates);
     });
   }
 
-  fetchNextAvailableDate(): void {
-    if (this.reservations.length > 0) {
-      const sortedReservations = this.reservations
-        .map((res) => res.borrowEndDate)
-        .sort((a, b) => a.getTime() - b.getTime());
-
-      const lastEndDate = sortedReservations[sortedReservations.length - 1];
-      this.nextAvailableDate = new Date(lastEndDate.getTime() + 24 * 60 * 60 * 1000);
-    } else {
-      this.nextAvailableDate = new Date(); // Disponible immédiatement
+  // Appliquer une classe pour les jours réservés
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month') {
+      const dateString = cellDate.toISOString().split('T')[0];
+      return this.reservedDates.includes(dateString) ? 'reserved-date' : '';
     }
-  }
+    return '';
+  };
 
   confirmReservation(): void {
-    if (!this.borrowStartDate || !this.borrowEndDate || !this.deviceDetails || !this.currentUserId) {
-      alert('Veuillez remplir toutes les informations nécessaires.');
-      return;
-    }
-
-    const hasConflict = this.checkDateConflict(this.borrowStartDate, this.borrowEndDate);
-
-    if (hasConflict) {
-      this.getNextAvailableDate();
-      alert('Les dates sélectionnées sont indisponibles.');
-      this.borrowStartDate = null;
-      this.borrowEndDate = null;
+    if (!this.borrowStartDate || !this.borrowEndDate || !this.deviceDetails) {
+      alert('Veuillez remplir les informations nécessaires.');
       return;
     }
 
     const reservation: Omit<Reservation, 'id'> = {
-      borrowStartDate: new Date(this.borrowStartDate!),
-      borrowEndDate: new Date(this.borrowEndDate!),
-      user: this.currentUserId!,
+      borrowStartDate: new Date(this.borrowStartDate),
+      borrowEndDate: new Date(this.borrowEndDate),
+      user: '', // Ajouter l'utilisateur si nécessaire
       deviceId: this.deviceId,
     };
 
@@ -93,37 +85,11 @@ export class ReservationComponent implements OnInit {
       .addReservation(reservation)
       .then(() => {
         alert('Réservation confirmée !');
-        this.borrowStartDate = null;
-        this.borrowEndDate = null;
-        console.log('Réservation effectuée avec succès :', reservation);
         this.router.navigate(['/home']);
       })
       .catch((error) => {
         console.error('Erreur lors de la réservation :', error);
         alert('Une erreur est survenue lors de la réservation.');
       });
-  }
-
-  checkDateConflict(startDate: Date, endDate: Date): boolean {
-    return this.reservations.some((reservation) => {
-      const resStart = reservation.borrowStartDate.getTime();
-      const resEnd = reservation.borrowEndDate.getTime();
-      return startDate.getTime() <= resEnd && endDate.getTime() >= resStart;
-    });
-  }
-
-  getNextAvailableDate(): void {
-    const sortedReservations = this.reservations
-      .map((res) => res.borrowEndDate)
-      .sort((a, b) => a.getTime() - b.getTime());
-
-    if (sortedReservations.length > 0) {
-      const lastEndDate = sortedReservations[sortedReservations.length - 1];
-      this.nextAvailableDate = new Date(lastEndDate.getTime() + 24 * 60 * 60 * 1000);
-      alert(`Prochaine disponibilité : ${this.nextAvailableDate.toLocaleDateString()}`);
-    } else {
-      this.nextAvailableDate = new Date();
-      alert(`L'appareil est disponible dès maintenant.`);
-    }
   }
 }

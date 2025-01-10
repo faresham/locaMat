@@ -69,3 +69,15 @@ h1 {
 button {
   padding: 10px 20px;
 }
+
+.mat-calendar-body-cell.reserved-date {
+  color: #d9534f !important; /* Rouge pour les jours réservés */
+  background-color: #fbe3e3 !important; /* Fond rouge clair */
+  border-radius: 50%; /* Cercle autour de la date */
+  font-weight: bold; /* Texte en gras */
+}
+
+.mat-calendar-body-cell.reserved-date:hover {
+  background-color: #f8d7da !important; /* Fond plus clair au survol */
+  color: #a71d2a !important; /* Rouge plus sombre au survol */
+}

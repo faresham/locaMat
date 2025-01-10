@@ -109,4 +109,44 @@ export class ReservationService {
       })
     );
   }
+
+  getAvailableSlots(deviceId: string): Observable<{ start: Date; end: Date }[]> {
+    return this.getReservationsByDeviceId(deviceId).pipe(
+      map((reservations) => {
+        // Trier les réservations par date de début
+        const sortedReservations = reservations.sort(
+          (a, b) => a.borrowStartDate.getTime() - b.borrowStartDate.getTime()
+        );
+
+        const availableSlots: { start: Date; end: Date }[] = [];
+        const today = new Date();
+
+        // Vérifier la disponibilité avant la première réservation
+        if (sortedReservations.length === 0 || sortedReservations[0].borrowStartDate > today) {
+          availableSlots.push({
+            start: today,
+            end: sortedReservations[0]?.borrowStartDate || new Date(9999, 11, 31),
+          });
+        }
+
+        // Vérifier les créneaux entre les réservations
+        for (let i = 0; i < sortedReservations.length - 1; i++) {
+          const currentEnd = sortedReservations[i].borrowEndDate;
+          const nextStart = sortedReservations[i + 1].borrowStartDate;
+
+          if (currentEnd < nextStart) {
+            availableSlots.push({ start: new Date(currentEnd.getTime() + 1), end: nextStart });
+          }
+        }
+
+        // Vérifier la disponibilité après la dernière réservation
+        if (sortedReservations.length > 0) {
+          const lastEnd = sortedReservations[sortedReservations.length - 1].borrowEndDate;
+          availableSlots.push({ start: new Date(lastEnd.getTime() + 1), end: new Date(9999, 11, 31) });
+        }
+
+        return availableSlots;
+      })
+    );
+  }
 }

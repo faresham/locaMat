@@ -2,8 +2,6 @@
   <ul>
     <li><a routerLink="/home" routerLinkActive="active">Accueil</a></li>
     <hr class="divider" />
-    <li><a routerLink="/add-device" routerLinkActive="active">Ajouter matériel (a modifier)</a></li>
-    <hr class="divider" />
 
     <!-- Sous-menu Admin -->
     <li *ngIf="isAdmin">
@@ -12,16 +10,14 @@
       </div>
       <ul *ngIf="isAdminMenuOpen" class="submenu">
         <hr class="divider" />
-        <li><a routerLink="/admin/devices" routerLinkActive="active">Gestion des matériels</a></li>
+        <li><a routerLink="/admin/device-management" routerLinkActive="active">Gestion des matériels</a></li>
         <hr class="divider" />
-        <li><a routerLink="/admin/users" routerLinkActive="active">Gestion des réservations</a></li>
+        <li><a routerLink="/admin/reservation-management" routerLinkActive="active">Gestion des réservations</a></li>
         <hr class="divider" />
-        <li><a routerLink="/admin/users" routerLinkActive="active">Gestion des utilisateurs</a></li>
-        <hr class="divider" />
-        <li><a routerLink="/admin/reports" routerLinkActive="active">Rapports et statistiques</a></li>
+        <li><a routerLink="admin/user-management" routerLinkActive="active">Gestion des utilisateurs</a></li>
         <hr class="divider" />
       </ul>
     </li>
-    <hr class="divider" />
+
   </ul>
 </div>
