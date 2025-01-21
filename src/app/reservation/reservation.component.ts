@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { DeviceService, Device } from '../services/device/device.service';
-import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-reservation',
@@ -14,7 +13,7 @@ export class ReservationComponent implements OnInit {
   deviceDetails: Device | null = null;
   borrowStartDate: Date | null = null;
   borrowEndDate: Date | null = null;
-  reservedDates: string[] = []; // Liste des dates réservées sous format YYYY-MM-DD
+  reservedDates: Date[] = []; // List of reserved dates as Date objects
 
   constructor(
     private route: ActivatedRoute,
@@ -44,29 +43,69 @@ export class ReservationComponent implements OnInit {
       this.reservedDates = reservations.flatMap((reservation) => {
         const start = new Date(reservation.borrowStartDate);
         const end = new Date(reservation.borrowEndDate);
-        const dates: string[] = [];
+        const dates: Date[] = [];
 
-        // Générer toutes les dates entre start et end
         while (start <= end) {
-          dates.push(start.toISOString().split('T')[0]); // Format YYYY-MM-DD
+          dates.push(new Date(start)); // Add each date to the list
           start.setDate(start.getDate() + 1);
         }
-
         return dates;
       });
-
-      console.log('Dates réservées :', this.reservedDates);
     });
   }
 
-  // Appliquer une classe pour les jours réservés
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
-    if (view === 'month') {
-      const dateString = cellDate.toISOString().split('T')[0];
-      return this.reservedDates.includes(dateString) ? 'reserved-date' : '';
+  // Filter function to disable reserved dates
+  isDateReserved: (date: Date | null) => boolean = (date: Date | null): boolean => {
+    if (!date) {
+      return false; // Null handling
     }
-    return '';
+
+    const isReserved = this.reservedDates.some(
+      (reservedDate) =>
+        reservedDate.getDate() === date.getDate() &&
+        reservedDate.getMonth() === date.getMonth() &&
+        reservedDate.getFullYear() === date.getFullYear()
+    );
+
+    return !isReserved;
   };
+
+  getNextReservedDate(date: Date): Date | null {
+    // Trier les dates réservées pour garantir qu'elles sont dans l'ordre croissant
+    const sortedReservedDates = [...this.reservedDates].sort((a, b) => a.getTime() - b.getTime());
+
+    // Trouver la prochaine date réservée après la date donnée
+    for (const reservedDate of sortedReservedDates) {
+      if (reservedDate.getTime() > date.getTime()) {
+        return reservedDate; // Retourne la prochaine date réservée
+      }
+    }
+
+    return null; // Aucun jour réservé après cette date
+  }
+
+  onStartDateChange(): void {
+    if (this.borrowStartDate) {
+      const nextReservedDate = this.getNextReservedDate(this.borrowStartDate);
+
+      if (nextReservedDate && nextReservedDate.getTime() === this.borrowStartDate.getTime() + 86400000) {
+        console.log(`La prochaine date réservée est ${nextReservedDate.toDateString()}.`);
+        this.borrowEndDate = this.borrowStartDate;
+      }
+    }
+  }
+
+  onEndDateChange(): void {
+    if (this.borrowStartDate && this.borrowEndDate) {
+      const nextReservedDate = this.getNextReservedDate(this.borrowStartDate);
+
+      if (nextReservedDate && this.borrowEndDate >= nextReservedDate) {
+        alert(`La date de fin doit être avant ${nextReservedDate.toLocaleDateString()}.`);
+        this.borrowEndDate = new Date(nextReservedDate.getTime() - 86400000); // Ajuster à la dernière date disponible
+      }
+    }
+  }
+
 
   confirmReservation(): void {
     if (!this.borrowStartDate || !this.borrowEndDate || !this.deviceDetails) {
@@ -77,7 +116,7 @@ export class ReservationComponent implements OnInit {
     const reservation: Omit<Reservation, 'id'> = {
       borrowStartDate: new Date(this.borrowStartDate),
       borrowEndDate: new Date(this.borrowEndDate),
-      user: '', // Ajouter l'utilisateur si nécessaire
+      user: '', // Add user if needed
       deviceId: this.deviceId,
     };
 
@@ -88,7 +127,6 @@ export class ReservationComponent implements OnInit {
         this.router.navigate(['/home']);
       })
       .catch((error) => {
-        console.error('Erreur lors de la réservation :', error);
         alert('Une erreur est survenue lors de la réservation.');
       });
   }

@@ -70,14 +70,14 @@ button {
   padding: 10px 20px;
 }
 
-.mat-calendar-body-cell.reserved-date {
-  color: #d9534f !important; /* Rouge pour les jours réservés */
-  background-color: #fbe3e3 !important; /* Fond rouge clair */
-  border-radius: 50%; /* Cercle autour de la date */
-  font-weight: bold; /* Texte en gras */
+/* Dates désactivées (réservées) en rouge */
+.mat-calendar-body-disabled {
+  background-color: #f44336 !important; /* Rouge */
+  color: white !important; /* Texte blanc */
+  border-radius: 50%; /* Optionnel pour arrondir les cercles */
 }
 
-.mat-calendar-body-cell.reserved-date:hover {
-  background-color: #f8d7da !important; /* Fond plus clair au survol */
-  color: #a71d2a !important; /* Rouge plus sombre au survol */
+/* Dates activées (libres) */
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled) {
+  color: #000 !important; /* Texte noir pour les dates disponibles */
 }
