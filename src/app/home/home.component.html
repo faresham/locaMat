@@ -57,10 +57,10 @@
         />
       </div>
       <div class="modal-dispo">
-        <span class="availability available" *ngIf="nextAvailableDate === 'Disponible'">
+        <span class="availability available" *ngIf="!nextAvailableDate">
           Disponible
         </span>
-        <span class="availability unavailable" *ngIf="nextAvailableDate !== 'Disponible'">
+        <span class="availability unavailable" *ngIf="nextAvailableDate">
           Disponible à partir du {{ nextAvailableDate | date: 'longDate' }}
         </span>
       </div>

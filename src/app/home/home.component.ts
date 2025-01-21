@@ -47,21 +47,40 @@ export class HomeComponent implements OnInit {
     return this.reservations.filter((reservation) => reservation.deviceId === deviceId);
   }
 
-  getNextAvailableDateForDevice(deviceId: string): string {
+  getNextAvailableDateForDevice(deviceId: string): Date | null {
+    // Récupérer les réservations pour l'appareil
     const reservations = this.getReservationsForDevice(deviceId);
 
     if (reservations.length > 0) {
-      const sortedReservations = reservations
-        .map((res) => res.borrowEndDate)
-        .sort((a, b) => a.getTime() - b.getTime());
+      // Trier les réservations par date de début croissante
+      const sortedReservations = reservations.sort(
+        (a, b) => new Date(a.borrowStartDate).getTime() - new Date(b.borrowStartDate).getTime()
+      );
 
-      const lastEndDate = sortedReservations[sortedReservations.length - 1];
-      const nextAvailableDate = new Date(lastEndDate.getTime() + 24 * 60 * 60 * 1000);
-      return nextAvailableDate.toLocaleDateString();
+      // Rechercher le premier intervalle libre entre les réservations
+      for (let i = 0; i < sortedReservations.length - 1; i++) {
+        const currentEndDate = new Date(sortedReservations[i].borrowEndDate);
+        const nextStartDate = new Date(sortedReservations[i + 1].borrowStartDate);
+
+        // Vérifier s'il y a un intervalle libre entre les réservations
+        if (currentEndDate.getTime() + 24 * 60 * 60 * 1000 < nextStartDate.getTime()) {
+          // Retourner le jour après la fin de la réservation actuelle
+          return new Date(currentEndDate.getTime() + 24 * 60 * 60 * 1000);
+        }
+      }
+
+      // Si aucune date libre entre les réservations, prendre la fin de la dernière réservation
+      const lastEndDate = new Date(
+        sortedReservations[sortedReservations.length - 1].borrowEndDate
+      );
+      return new Date(lastEndDate.getTime() + 24 * 60 * 60 * 1000);
     }
 
-    return 'Disponible'; // Si aucune réservation, immédiatement disponible
+    // Si aucune réservation, l'appareil est immédiatement disponible
+    return null; // Aujourd'hui est disponible
   }
+
+
 
 
   filterDevices(): void {
