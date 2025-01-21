@@ -1,24 +1,22 @@
-/* Styles de base pour la sidebar */
+/* Sidebar */
 .sidebar {
-  background-color: #f9f9f9;   /* Garde la couleur originale */
-  color: #000000;
+  background-color: #f4f5f7; /* Couleur moderne claire */
+  color: #333;
   position: fixed;
-  top: 64px;                    /* Commence juste en dessous du header (64px de hauteur) */
+  top: 64px;
   left: 0;
-  height: calc(100vh - 64px - 50px); /* La sidebar prend toute la hauteur, sauf celle du header et du footer */
-  width: 0;                     /* Commence avec une largeur de 0 */
-  transition: width 0.3s ease, box-shadow 0.3s ease; /* Transition douce pour l'ouverture et l'ombre */
-  overflow: hidden;             /* Empêche le débordement du contenu lorsque fermée */
-  z-index: 999;                 /* Assure que la sidebar est au-dessus des autres éléments, mais en dessous du header */
-  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre subtile pour donner de la profondeur */
+  height: calc(100vh - 64px - 50px);
+  width: 0;
+  transition: width 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  z-index: 999;
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Lorsque la sidebar est ouverte */
 .sidebar-open {
-  width: 250px;                 /* Largeur de la sidebar lorsqu'elle est ouverte */
+  width: 250px;
 }
 
-/* Styles pour les éléments de la sidebar */
 .sidebar ul {
   list-style-type: none;
   padding: 20px 0;
@@ -26,66 +24,124 @@
 }
 
 .sidebar ul li {
-  margin: 20px 0;
-  text-align: center;
+  margin: 15px 0;
+  text-align: center; /* Centre le texte */
 }
 
 .sidebar ul li a {
-  color: #000000;               /* Garde la couleur originale pour le texte */
+  color: #333;
   text-decoration: none;
-  padding: 15px;
+  padding: 12px 15px;
   display: block;
-  border-radius: 8px;           /* Coins arrondis pour un look plus moderne */
-  transition: background-color 0.3s, padding-left 0.3s; /* Transition pour un effet fluide */
+  border-radius: 8px;
+  font-size: 16px;
+  transition: background-color 0.3s, padding-left 0.3s ease;
 }
 
-/* Effet de survol (hover) */
+/* Hover Effect */
 .sidebar ul li a:hover {
-  background-color: #646e78;    /* Couleur de fond lors du survol */
-  padding-left: 20px;            /* Décalage vers la droite pour donner un effet de survol */
+  background-color: #e0e0e0;
+  padding-left: 10px;
 }
 
-/* Lien actif (lorsque l'élément est sélectionné) */
 .sidebar ul li a.active {
-  background-color: #2196f3;    /* Garde la couleur active du lien */
+  background-color: #007bff;
   color: white;
 }
 
-/* Style pour les icônes dans la sidebar (si tu veux ajouter des icônes) */
-.sidebar ul li a mat-icon {
-  margin-right: 10px;           /* Espacement entre l'icône et le texte */
-  font-size: 18px;              /* Taille d'icône plus grande */
-  transition: transform 0.3s ease;
+/* Divider */
+.divider {
+  border: 0;
+  height: 1px;
+  background: #d1d9e0; /* Couleur douce */
+  margin: 10px auto; /* Espacement centré */
+  width: 80%; /* Réduit la largeur pour un effet visuel agréable */
 }
 
-/* Effet de l'icône pendant le survol */
-.sidebar ul li a:hover mat-icon {
-  transform: translateX(5px);   /* Déplacement de l'icône vers la droite lors du survol */
+/* Sous-menu Admin */
+.admin-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #f4f5f7;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-/* Styles pour le bouton de fermeture (si tu en veux un) */
+.admin-menu-header:hover {
+  background-color: #d1d9e0;
+}
+
+.admin-menu-header .arrow {
+  font-size: 14px;
+  transition: transform 0.3s;
+}
+
+.admin-menu-header .arrow.open {
+  transform: rotate(180deg);
+}
+
+.admin-submenu {
+  list-style: none;
+  padding-left: 0; /* Suppression du décalage pour rester aligné */
+  margin: 10px 0;
+}
+
+.admin-submenu li {
+  margin: 8px 0;
+  text-align: center; /* Centre les liens du sous-menu */
+}
+
+.admin-submenu li a {
+  font-size: 14px;
+  color: #555;
+  text-decoration: none;
+  padding: 8px 12px;
+  display: inline-block; /* Garde les liens alignés horizontalement */
+  border-radius: 6px;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.admin-submenu li a:hover {
+  background-color: #e8e8e8;
+  padding-left: 10px;
+}
+
+.admin-submenu li a.active {
+  background-color: #0056b3;
+  color: white;
+}
+
+
+/* Fermeture de la sidebar */
+.sidebar-closed {
+  box-shadow: none; /* Retire l'ombre quand fermée */
+}
+
+/* Bouton de fermeture (si utilisé) */
 .sidebar .close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
   background-color: transparent;
   border: none;
-  color: #000000;
+  color: #333;
   font-size: 24px;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
 .sidebar .close-btn:hover {
-  transform: rotate(90deg);      /* Animation de rotation lors du survol */
+  transform: rotate(90deg); /* Rotation douce au survol */
 }
 
-/* Lorsque la sidebar est fermée, ajouter une ombre */
-.sidebar-closed {
-  box-shadow: none;             /* Supprimer l'ombre lorsque la sidebar est fermée */
-}
-
-/* Assurer que la sidebar ne dépasse pas le footer */
-.sidebar {
-  height: calc(100vh - 64px - 50px); /* Calcule la hauteur de la sidebar en enlevant la hauteur du header et du footer */
+/* Divider */
+.divider {
+  border: 0;
+  height: 1px;
+  background: #e0e0e0; /* Couleur douce */
+  margin: 10px 0; /* Espacement vertical */
 }

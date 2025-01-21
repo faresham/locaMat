@@ -1,10 +1,23 @@
 <div class="sidebar" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
   <ul>
     <li><a routerLink="/home" routerLinkActive="active">Accueil</a></li>
-    <li><a routerLink="/profile" routerLinkActive="active">Profil</a></li>
+    <hr class="divider" />
 
-    <!-- Lien Admin uniquement visible pour les admins -->
-    <li *ngIf="isAdmin"><a routerLink="/admin" routerLinkActive="active">Admin</a></li>
+    <!-- Sous-menu Admin -->
+    <li *ngIf="isAdmin">
+      <div (click)="toggleAdminMenu()" class="submenu-header">
+        <a>Menu Administrateur</a>
+      </div>
+      <ul *ngIf="isAdminMenuOpen" class="submenu">
+        <hr class="divider" />
+        <li><a routerLink="/admin/device-management" routerLinkActive="active">Gestion des matériels</a></li>
+        <hr class="divider" />
+        <li><a routerLink="/admin/reservation-management" routerLinkActive="active">Gestion des réservations</a></li>
+        <hr class="divider" />
+        <li><a routerLink="admin/user-management" routerLinkActive="active">Gestion des utilisateurs</a></li>
+        <hr class="divider" />
+      </ul>
+    </li>
 
   </ul>
 </div>

@@ -1,0 +1,97 @@
+<div class="user-management-container">
+  <h1>Gestion des utilisateurs</h1>
+
+  <!-- Barre de recherche -->
+  <div class="header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher un utilisateur</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (input)="filterUsers()" placeholder="Nom, prénom ou email" />
+      <button *ngIf="searchTerm" mat-icon-button matSuffix (click)="searchTerm=''; filterUsers()" aria-label="Clear">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-raised-button color="primary" class="add-user-btn" (click)="openDialog()">Ajouter</button>
+  </div>
+
+  <!-- Liste des utilisateurs -->
+  <table mat-table [dataSource]="displayedUsers" class="user-table">
+    <!-- Prénom -->
+    <ng-container matColumnDef="prenom">
+      <th mat-header-cell *matHeaderCellDef>Prénom</th>
+      <td mat-cell *matCellDef="let user">{{ user.prenom }}</td>
+    </ng-container>
+
+    <!-- Nom -->
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef>Nom</th>
+      <td mat-cell *matCellDef="let user">{{ user.nom }}</td>
+    </ng-container>
+
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+    </ng-container>
+
+    <!-- Matricule -->
+    <ng-container matColumnDef="matricule">
+      <th mat-header-cell *matHeaderCellDef>Matricule</th>
+      <td mat-cell *matCellDef="let user">{{ user.matricule }}</td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-icon-button color="primary" (click)="openDialog(user)" aria-label="Modifier">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteUser(user.id)" aria-label="Supprimer">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header Row -->
+    <tr mat-header-row *matHeaderRowDef="['prenom', 'nom', 'email', 'matricule', 'actions']"></tr>
+
+    <!-- Data Rows -->
+    <tr mat-row *matRowDef="let row; columns: ['prenom', 'nom', 'email', 'matricule', 'actions'];"></tr>
+  </table>
+
+  <p *ngIf="displayedUsers.length === 0">Aucun utilisateur trouvé.</p>
+
+  <!-- Modal -->
+  <div *ngIf="isDialogOpen" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditing ? 'Modifier' : 'Ajouter' }} un utilisateur</h2>
+
+      <form>
+        <mat-form-field appearance="fill">
+          <mat-label>Prénom</mat-label>
+          <input matInput [(ngModel)]="dialogUser.prenom" name="prenom" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nom</mat-label>
+          <input matInput [(ngModel)]="dialogUser.nom" name="nom" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="dialogUser.email" name="email" type="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Matricule</mat-label>
+          <input matInput [(ngModel)]="dialogUser.matricule" name="matricule" required />
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="button" (click)="saveDialogUser()">Enregistrer</button>
+          <button mat-button type="button" (click)="closeDialog()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

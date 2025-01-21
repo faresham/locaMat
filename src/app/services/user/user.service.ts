@@ -3,11 +3,11 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 
 export interface User {
-  id?: string;
-  firstName: string;
-  lastName: string;
+  id: string;
+  nom: string;
+  prenom: string;
   email: string;
-  role: 'Administrateur' | 'Emprunteur';
+  isAdmin: boolean;
   matricule: string;
 }
 

@@ -1,6 +1,13 @@
 <app-header *ngIf="!isLoginPage()" (toggleSidebar)="toggleSidebar()"></app-header>
 
-<div class="layout" [ngClass]="{'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen}">
+<div
+  class="layout"
+  [ngClass]="{
+    'sidebar-open': isSidebarOpen && !isLoginPage(),
+    'sidebar-closed': !isSidebarOpen && !isLoginPage(),
+    'no-sidebar': isLoginPage()
+  }"
+>
   <app-sidebar *ngIf="!isLoginPage()" [isSidebarOpen]="isSidebarOpen"></app-sidebar>
   <div class="content">
     <router-outlet></router-outlet>
