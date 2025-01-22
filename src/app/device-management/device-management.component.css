@@ -1,0 +1,151 @@
+/* Conteneur principal */
+.device-management-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  /* Barre de recherche */
+  .search-field {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+  }
+  
+  /* Liste des matériels */
+  .device-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  th.mat-header-cell,
+  td.mat-cell {
+    text-align: left;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  th.mat-header-cell {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  td.mat-cell {
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+  }
+  
+  .mat-row:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Actions */
+  .actions-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  button.mat-icon-button {
+    transition: transform 0.2s;
+  }
+  
+  button.mat-icon-button:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  /* Boutons dans la modal */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button.mat-raised-button {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  button.mat-raised-button.cancel {
+    background-color: #d9534f;
+    color: white;
+  }
+  
+  button.mat-raised-button.save {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  /* Ajout et recherche */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-device-btn {
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .add-device-btn:hover {
+    background-color: #0056b3;
+  }
+  

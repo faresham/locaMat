@@ -1,0 +1,110 @@
+<div class="device-management-container">
+    <h1>Gestion des Matériels</h1>
+  
+    <!-- Barre de recherche -->
+    <div class="header">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Rechercher un matériel</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (input)="filterDevices()"
+          placeholder="Nom, référence ou version"
+        />
+        <button *ngIf="searchTerm" mat-icon-button matSuffix (click)="searchTerm=''; filterDevices()" aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <!-- Bouton Ajouter -->
+      <button mat-raised-button color="primary" class="add-device-btn" (click)="openDialog()">
+        Ajouter un Matériel
+      </button>
+    </div>
+  
+    <!-- Liste des matériels -->
+    <table mat-table [dataSource]="displayedDevices" class="device-table">
+      <!-- Nom -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let device">{{ device.name }}</td>
+      </ng-container>
+  
+      <!-- Référence -->
+      <ng-container matColumnDef="reference">
+        <th mat-header-cell *matHeaderCellDef>Référence</th>
+        <td mat-cell *matCellDef="let device">{{ device.reference }}</td>
+      </ng-container>
+  
+      <!-- Version -->
+      <ng-container matColumnDef="version">
+        <th mat-header-cell *matHeaderCellDef>Version</th>
+        <td mat-cell *matCellDef="let device">{{ device.version }}</td>
+      </ng-container>
+  
+      <!-- Numéro de téléphone -->
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef>Numéro de Téléphone</th>
+        <td mat-cell *matCellDef="let device">{{ device.phoneNumber }}</td>
+      </ng-container>
+  
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let device">
+          <button mat-icon-button color="primary" (click)="editDevice(device.id)" aria-label="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteDevice(device.id)" aria-label="Supprimer">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="['name', 'reference', 'version', 'phoneNumber', 'actions']"></tr>
+  
+      <!-- Data Rows -->
+      <tr mat-row *matRowDef="let row; columns: ['name', 'reference', 'version', 'phoneNumber', 'actions'];"></tr>
+    </table>
+  
+    <p *ngIf="displayedDevices.length === 0">Aucun matériel trouvé.</p>
+  
+    <!-- Modal -->
+<div *ngIf="isDialogOpen" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditing ? 'Modifier' : 'Ajouter' }} un matériel</h2>
+  
+      <form>
+        <mat-form-field appearance="fill">
+          <mat-label>Nom</mat-label>
+          <input matInput [(ngModel)]="dialogDevice.name" name="name" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Référence</mat-label>
+          <input matInput [(ngModel)]="dialogDevice.reference" name="reference" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Version</mat-label>
+          <input matInput [(ngModel)]="dialogDevice.version" name="version" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Numéro de Téléphone</mat-label>
+          <input matInput [(ngModel)]="dialogDevice.phoneNumber" name="phoneNumber" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Lien de la photo</mat-label>
+          <input matInput [(ngModel)]="dialogDevice.photo" name="photo" placeholder="https://..." />
+        </mat-form-field>
+  
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="button" (click)="saveDialogDevice()">Enregistrer</button>
+          <button mat-button type="button" (click)="closeDialog()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
