@@ -15,7 +15,7 @@ export interface Reservation {
   providedIn: 'root',
 })
 export class ReservationService {
-  private collectionName = 'reservations';
+  private collectionName = 'reservations'; // Nom de la collection Firebase
 
   constructor(private firestore: AngularFirestore) {}
 
@@ -37,16 +37,21 @@ export class ReservationService {
 
   // Ajouter une réservation
   addReservation(reservation: Omit<Reservation, 'id'>): Promise<void> {
+    const id = this.firestore.createId();
     return this.firestore
       .collection(this.collectionName)
-      .add({
-        ...reservation,
-      })
-      .then(() => console.log('Réservation ajoutée avec succès.'))
-      .catch((error) => {
-        console.error('Erreur lors de l\'ajout de la réservation :', error);
-        throw error;
-      });
+      .doc(id)
+      .set({ ...reservation, id });
+  }
+
+  // Mettre à jour une réservation existante
+  updateReservation(id: string, reservation: Partial<Reservation>): Promise<void> {
+    return this.firestore.collection(this.collectionName).doc(id).update(reservation);
+  }
+
+  // Supprimer une réservation
+  deleteReservation(id: string): Promise<void> {
+    return this.firestore.collection(this.collectionName).doc(id).delete();
   }
 
   // Récupérer les réservations d'un appareil spécifique
@@ -88,6 +93,7 @@ export class ReservationService {
     return start1 <= end2 && end1 >= start2;
   }
 
+  // Obtenir la prochaine date disponible pour un appareil
   getNextAvailableDate(deviceId: string, requestedStartDate: Date): Observable<Date | null> {
     return this.getReservationsByDeviceId(deviceId).pipe(
       map((reservations) => {
@@ -110,6 +116,7 @@ export class ReservationService {
     );
   }
 
+  // Récupérer les créneaux disponibles pour un appareil
   getAvailableSlots(deviceId: string): Observable<{ start: Date; end: Date }[]> {
     return this.getReservationsByDeviceId(deviceId).pipe(
       map((reservations) => {

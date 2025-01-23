@@ -9,11 +9,11 @@ import { DeviceService, Device } from '../services/device/device.service';
   styleUrls: ['./reservation.component.css'],
 })
 export class ReservationComponent implements OnInit {
-  deviceId: string = '';
-  deviceDetails: Device | null = null;
-  borrowStartDate: Date | null = null;
-  borrowEndDate: Date | null = null;
-  reservedDates: Date[] = []; // List of reserved dates as Date objects
+  deviceId: string = ''; // ID de l'appareil sélectionné
+  deviceDetails: Device | null = null; // Détails de l'appareil
+  borrowStartDate: Date | null = null; // Date de début de réservation
+  borrowEndDate: Date | null = null; // Date de fin de réservation
+  reservedDates: Date[] = []; // Liste des dates réservées pour l'appareil
 
   constructor(
     private route: ActivatedRoute,
@@ -32,69 +32,79 @@ export class ReservationComponent implements OnInit {
     });
   }
 
+  // Récupérer les détails de l'appareil
   fetchDeviceDetails(): void {
-    this.deviceService.getDeviceById(this.deviceId).subscribe((device) => {
-      this.deviceDetails = device;
-    });
+    this.deviceService.getDeviceById(this.deviceId).subscribe(
+      (device) => {
+        this.deviceDetails = device;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des détails de l\'appareil :', error);
+      }
+    );
   }
 
+  // Récupérer les dates réservées pour l'appareil
   fetchReservedDates(): void {
-    this.reservationService.getReservationsByDeviceId(this.deviceId).subscribe((reservations: Reservation[]) => {
-      this.reservedDates = reservations.flatMap((reservation) => {
-        const start = new Date(reservation.borrowStartDate);
-        const end = new Date(reservation.borrowEndDate);
-        const dates: Date[] = [];
+    this.reservationService.getReservationsByDeviceId(this.deviceId).subscribe(
+      (reservations: Reservation[]) => {
+        this.reservedDates = reservations.flatMap((reservation) => {
+          const start = new Date(reservation.borrowStartDate!);
+          const end = new Date(reservation.borrowEndDate!);
+          const dates: Date[] = [];
 
-        while (start <= end) {
-          dates.push(new Date(start)); // Add each date to the list
-          start.setDate(start.getDate() + 1);
-        }
-        return dates;
-      });
-    });
+          while (start <= end) {
+            dates.push(new Date(start));
+            start.setDate(start.getDate() + 1); // Ajouter un jour
+          }
+          return dates;
+        });
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des dates réservées :', error);
+      }
+    );
   }
 
-  // Filter function to disable reserved dates
-  isDateReserved: (date: Date | null) => boolean = (date: Date | null): boolean => {
+  // Vérifier si une date est réservée
+  isDateReserved = (date: Date | null): boolean => {
     if (!date) {
-      return false; // Null handling
+      return false;
     }
 
-    const isReserved = this.reservedDates.some(
+    return this.reservedDates.some(
       (reservedDate) =>
         reservedDate.getDate() === date.getDate() &&
         reservedDate.getMonth() === date.getMonth() &&
         reservedDate.getFullYear() === date.getFullYear()
     );
-
-    return !isReserved;
   };
 
+  // Obtenir la prochaine date réservée après une date donnée
   getNextReservedDate(date: Date): Date | null {
-    // Trier les dates réservées pour garantir qu'elles sont dans l'ordre croissant
     const sortedReservedDates = [...this.reservedDates].sort((a, b) => a.getTime() - b.getTime());
 
-    // Trouver la prochaine date réservée après la date donnée
     for (const reservedDate of sortedReservedDates) {
       if (reservedDate.getTime() > date.getTime()) {
-        return reservedDate; // Retourne la prochaine date réservée
+        return reservedDate;
       }
     }
 
-    return null; // Aucun jour réservé après cette date
+    return null; // Pas de date réservée après celle-ci
   }
 
+  // Gérer les changements de la date de début
   onStartDateChange(): void {
     if (this.borrowStartDate) {
       const nextReservedDate = this.getNextReservedDate(this.borrowStartDate);
 
       if (nextReservedDate && nextReservedDate.getTime() === this.borrowStartDate.getTime() + 86400000) {
-        console.log(`La prochaine date réservée est ${nextReservedDate.toDateString()}.`);
-        this.borrowEndDate = this.borrowStartDate;
+        this.borrowEndDate = this.borrowStartDate; // Ajuster la date de fin si nécessaire
       }
     }
   }
 
+  // Gérer les changements de la date de fin
   onEndDateChange(): void {
     if (this.borrowStartDate && this.borrowEndDate) {
       const nextReservedDate = this.getNextReservedDate(this.borrowStartDate);
@@ -106,17 +116,17 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-
+  // Confirmer une réservation
   confirmReservation(): void {
     if (!this.borrowStartDate || !this.borrowEndDate || !this.deviceDetails) {
-      alert('Veuillez remplir les informations nécessaires.');
+      alert('Veuillez remplir toutes les informations nécessaires.');
       return;
     }
 
     const reservation: Omit<Reservation, 'id'> = {
       borrowStartDate: new Date(this.borrowStartDate),
       borrowEndDate: new Date(this.borrowEndDate),
-      user: '', // Add user if needed
+      user: '', // Ajouter l'utilisateur si nécessaire
       deviceId: this.deviceId,
     };
 
@@ -127,6 +137,7 @@ export class ReservationComponent implements OnInit {
         this.router.navigate(['/home']);
       })
       .catch((error) => {
+        console.error('Erreur lors de la réservation :', error);
         alert('Une erreur est survenue lors de la réservation.');
       });
   }

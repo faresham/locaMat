@@ -37,12 +37,13 @@ import {MatList, MatListItem} from '@angular/material/list';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
 import { DeviceManagementComponent } from './device-management/device-management.component';
+import { ReservationManagementComponent } from './reservation-management/reservation-management.component';
 
 
 registerLocaleData(localeFr, 'fr');
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, ReservationComponent, AddEditDeviceComponent, UserManagementComponent, DeviceManagementComponent],
+  declarations: [AppComponent, AuthComponent, HomeComponent, HeaderComponent, SidebarComponent, FooterComponent, ReservationComponent, AddEditDeviceComponent, UserManagementComponent, DeviceManagementComponent, ReservationManagementComponent],
 
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),  // Initialisation de Firebase
