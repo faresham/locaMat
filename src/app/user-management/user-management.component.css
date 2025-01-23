@@ -3,18 +3,19 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Titre principal */
 .title {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
-  font-size: 24px;
-  font-weight: bold;
+  color: #2c3e50;
+  font-size: 26px;
+  font-weight: 600;
 }
 
 /* Barre de recherche */
@@ -33,28 +34,32 @@
   width: 100%;
   margin-top: 20px;
   border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 th.mat-header-cell,
 td.mat-cell {
   text-align: left;
-  padding: 10px;
+  padding: 12px;
   font-size: 14px;
 }
 
 th.mat-header-cell {
-  background-color: #f4f4f4;
+  background-color: #ecf0f1;
   font-weight: bold;
-  color: #333;
+  color: #2c3e50;
 }
 
 td.mat-cell {
   border-bottom: 1px solid #e0e0e0;
   vertical-align: middle;
+  color: #34495e;
 }
 
 .mat-row:hover {
-  background-color: #f9f9f9;
+  background-color: #f4f8fb;
 }
 
 /* Actions */
@@ -65,11 +70,12 @@ td.mat-cell {
 }
 
 button.mat-icon-button {
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 button.mat-icon-button:hover {
   transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Modal */
@@ -79,51 +85,82 @@ button.mat-icon-button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050;
+  z-index: 1000;
 }
 
 .modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px 35px;
+  width: 450px;
+  max-width: 95%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.modal-title {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: bold;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Boutons dans la modal */
-.modal-buttons {
+/* Formulaire dans la modal */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  flex: 1;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.form-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 button.mat-raised-button {
+  flex: 1;
   font-size: 14px;
   font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
 }
 
 button.mat-raised-button.cancel {
-  background-color: #d9534f;
+  background-color: #e74c3c;
   color: white;
 }
 
+button.mat-raised-button.cancel:hover {
+  background-color: #c0392b;
+}
+
 button.mat-raised-button.save {
-  background-color: #28a745;
+  background-color: #2ecc71;
   color: white;
+}
+
+button.mat-raised-button.save:hover {
+  background-color: #27ae60;
 }
 
 /* Ajout et recherche */
@@ -135,16 +172,17 @@ button.mat-raised-button.save {
 }
 
 .add-user-btn {
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
   font-size: 14px;
   font-weight: bold;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .add-user-btn:hover {
-  background-color: #0056b3;
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
