@@ -29,6 +29,7 @@ export class UserManagementComponent implements OnInit {
 
   constructor(private userService: UserService, private authService: AuthService) {
     this.users$ = this.userService.getUsers();
+    console.log(this.users$);
   }
 
   ngOnInit(): void {

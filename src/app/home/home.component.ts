@@ -109,8 +109,4 @@ export class HomeComponent implements OnInit {
   navigateToReservation(deviceId: string): void {
     this.router.navigate(['/reservation'], { queryParams: { deviceId } });
   }
-
-  navigateToEditDevice(deviceId: string): void {
-    this.router.navigate(['/edit-device', deviceId]);
-  }
 }

@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { DeviceService, Device } from '../services/device/device.service';
+import {AuthService} from '../services/auth/auth.service';
+// @ts-ignore
+import firebase from 'firebase/compat';
+import User = firebase.User;
+
 
 @Component({
   selector: 'app-reservation',
@@ -10,6 +15,7 @@ import { DeviceService, Device } from '../services/device/device.service';
 })
 export class ReservationComponent implements OnInit {
   deviceId: string = '';
+  userId: string = '';
   deviceDetails: Device | null = null;
   borrowStartDate: Date | null = null;
   borrowEndDate: Date | null = null;
@@ -19,7 +25,8 @@ export class ReservationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +37,11 @@ export class ReservationComponent implements OnInit {
         this.fetchReservedDates();
       }
     });
+
+    this.authService.getCurrentUser().subscribe((user: User) => {
+      this.userId = user.uid;
+      }
+    )
   }
 
   fetchDeviceDetails(): void {
@@ -116,7 +128,7 @@ export class ReservationComponent implements OnInit {
     const reservation: Omit<Reservation, 'id'> = {
       borrowStartDate: new Date(this.borrowStartDate),
       borrowEndDate: new Date(this.borrowEndDate),
-      user: '', // Add user if needed
+      user: this.userId,
       deviceId: this.deviceId,
     };
 
