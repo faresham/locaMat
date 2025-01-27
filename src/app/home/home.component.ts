@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
     }
 
     // Si aucune réservation, l'appareil est immédiatement disponible
-    return null; // Aujourd'hui est disponible
+    return null;
   }
 
 
@@ -108,9 +108,5 @@ export class HomeComponent implements OnInit {
 
   navigateToReservation(deviceId: string): void {
     this.router.navigate(['/reservation'], { queryParams: { deviceId } });
-  }
-
-  navigateToEditDevice(deviceId: string): void {
-    this.router.navigate(['/edit-device', deviceId]);
   }
 }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { Router } from '@angular/router';
 
+
+
 @Component({
   selector: 'app-reservation-management',
   templateUrl: './reservation-management.component.html',
@@ -122,4 +124,6 @@ export class ReservationManagementComponent implements OnInit {
       );
     }
   }
+
+
 }

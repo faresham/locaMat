@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { DeviceService, Device } from '../services/device/device.service';
+import {AuthService} from '../services/auth/auth.service';
+// @ts-ignore
+import firebase from 'firebase/compat';
+import User = firebase.User;
+
 
 @Component({
   selector: 'app-reservation',
@@ -9,17 +14,19 @@ import { DeviceService, Device } from '../services/device/device.service';
   styleUrls: ['./reservation.component.css'],
 })
 export class ReservationComponent implements OnInit {
-  deviceId: string = ''; // ID de l'appareil sélectionné
-  deviceDetails: Device | null = null; // Détails de l'appareil
-  borrowStartDate: Date | null = null; // Date de début de réservation
-  borrowEndDate: Date | null = null; // Date de fin de réservation
-  reservedDates: Date[] = []; // Liste des dates réservées pour l'appareil
+  deviceId: string = '';
+  userId: string = '';
+  deviceDetails: Device | null = null;
+  borrowStartDate: Date | null = null;
+  borrowEndDate: Date | null = null;
+  reservedDates: Date[] = []; // List of reserved dates as Date objects
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +37,11 @@ export class ReservationComponent implements OnInit {
         this.fetchReservedDates();
       }
     });
+
+    this.authService.getCurrentUser().subscribe((user: User) => {
+      this.userId = user.uid;
+      }
+    )
   }
 
   // Récupérer les détails de l'appareil
@@ -126,7 +138,7 @@ export class ReservationComponent implements OnInit {
     const reservation: Omit<Reservation, 'id'> = {
       borrowStartDate: new Date(this.borrowStartDate),
       borrowEndDate: new Date(this.borrowEndDate),
-      user: '', // Ajouter l'utilisateur si nécessaire
+      user: this.userId,
       deviceId: this.deviceId,
     };
 
