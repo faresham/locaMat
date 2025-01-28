@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
 import { DeviceService, Device } from '../services/device/device.service';
-import {AuthService} from '../services/auth/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 // @ts-ignore
 import firebase from 'firebase/compat';
 import User = firebase.User;
-
 
 @Component({
   selector: 'app-reservation',
@@ -19,14 +18,14 @@ export class ReservationComponent implements OnInit {
   deviceDetails: Device | null = null;
   borrowStartDate: Date | null = null;
   borrowEndDate: Date | null = null;
-  reservedDates: Date[] = []; // List of reserved dates as Date objects
+  reservedDates: Date[] = []; // Liste des dates réservées
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
     private deviceService: DeviceService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +39,7 @@ export class ReservationComponent implements OnInit {
 
     this.authService.getCurrentUser().subscribe((user: User) => {
       this.userId = user.uid;
-      }
-    )
+    });
   }
 
   // Récupérer les détails de l'appareil
@@ -51,7 +49,7 @@ export class ReservationComponent implements OnInit {
         this.deviceDetails = device;
       },
       (error) => {
-        console.error('Erreur lors de la récupération des détails de l\'appareil :', error);
+        console.error("Erreur lors de la récupération des détails de l'appareil :", error);
       }
     );
   }
@@ -65,12 +63,21 @@ export class ReservationComponent implements OnInit {
           const end = new Date(reservation.borrowEndDate!);
           const dates: Date[] = [];
 
+          // Vérifie que les dates sont valides
+          if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            console.warn('Réservation avec dates invalides :', reservation);
+            return dates; // Ignore cette réservation
+          }
+
           while (start <= end) {
             dates.push(new Date(start));
             start.setDate(start.getDate() + 1); // Ajouter un jour
           }
+
           return dates;
         });
+
+        console.log('Dates réservées :', this.reservedDates); // Debug pour vérifier les dates
       },
       (error) => {
         console.error('Erreur lors de la récupération des dates réservées :', error);
@@ -81,15 +88,21 @@ export class ReservationComponent implements OnInit {
   // Vérifier si une date est réservée
   isDateReserved = (date: Date | null): boolean => {
     if (!date) {
-      return false;
+      return true; // Permet d'éviter un blocage si la date est null
     }
 
-    return this.reservedDates.some(
+    const today = new Date(); // Date actuelle
+  today.setHours(0, 0, 0, 0); // Réinitialise l'heure à 00:00:00 pour comparaison de date uniquement
+
+
+    const isReserved = this.reservedDates.some(
       (reservedDate) =>
         reservedDate.getDate() === date.getDate() &&
         reservedDate.getMonth() === date.getMonth() &&
         reservedDate.getFullYear() === date.getFullYear()
     );
+
+    return !isReserved ; // Renvoie true uniquement pour les dates non réservées
   };
 
   // Obtenir la prochaine date réservée après une date donnée

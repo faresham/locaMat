@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservationService, Reservation } from '../services/reservation/reservation.service';
-import { Router } from '@angular/router';
-
-
+import { AuthService } from '../services/auth/auth.service';
+import { DeviceService } from '../services/device/device.service';
 
 @Component({
   selector: 'app-reservation-management',
@@ -10,15 +9,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./reservation-management.component.css'],
 })
 export class ReservationManagementComponent implements OnInit {
-  reservations: Reservation[] = []; // Liste complète des réservations
-  displayedReservations: Reservation[] = []; // Liste filtrée pour affichage
+  reservations: any[] = []; // Liste enrichie
+  displayedReservations: any[] = []; // Liste filtrée
   searchTerm: string = ''; // Terme de recherche
 
-  // Variables pour les dates
-  borrowStartDate: Date | undefined = undefined;
-  borrowEndDate: Date | undefined = undefined;
-
-  // Variables pour la modal
   dialogReservation: Partial<Reservation> = {
     user: '',
     deviceId: '',
@@ -26,76 +20,130 @@ export class ReservationManagementComponent implements OnInit {
     borrowEndDate: undefined,
   };
 
-  isDialogOpen: boolean = false; // État d'ouverture de la modal
-  isEditing: boolean = false; // Détermine si on est en mode édition
+  isDialogOpen: boolean = false;
+  isEditing: boolean = false;
 
-  constructor(private reservationService: ReservationService, private router: Router) {}
+  constructor(
+    private reservationService: ReservationService,
+    private authService: AuthService,
+    private deviceService: DeviceService
+  ) {}
 
   ngOnInit(): void {
-    this.loadReservations(); // Charger les réservations au démarrage
+    this.loadReservations();
   }
 
-  // Charger toutes les réservations depuis Firebase
   loadReservations(): void {
+    console.log('🔵 [Début] Chargement des réservations...');
+
     this.reservationService.getReservations().subscribe(
       (reservations) => {
-        this.reservations = reservations;
-        this.displayedReservations = reservations; // Affichage initial
+        console.log('✅ [Step 1] Réservations brutes récupérées:', reservations);
+
+        const enrichedReservations: any[] = [];
+        reservations.forEach((reservation, index) => {
+          console.log(`🔄 [Step 2] Traitement de la réservation ID: ${reservation.id}`, reservation);
+
+          // Récupérer les détails de l'utilisateur
+          this.authService.getUserDetails(reservation.user).subscribe(
+            (user) => {
+              console.log(`👤 [Step 3] Détails de l'utilisateur récupérés pour ${reservation.user}:`, user);
+
+              // Récupérer les détails de l'appareil
+              this.deviceService.getDeviceById(reservation.deviceId).subscribe(
+                (device) => {
+                  console.log(`📱 [Step 4] Détails de l'appareil récupérés pour ${reservation.deviceId}:`, device);
+
+                  // Ajouter la réservation enrichie à la liste
+                  const enrichedReservation = {
+                    ...reservation,
+                    userFullName: user ? `${user.prenom} ${user.nom}` : 'Utilisateur inconnu',
+                    deviceName: device ? device.name : 'Appareil inconnu',
+                    deviceReference: device ? device.reference : 'Référence inconnue',
+                    deviceVersion: device ? device.version : 'Version inconnue',
+                  };
+
+                  console.log('🎯 [Step 5] Réservation enrichie:', enrichedReservation);
+                  enrichedReservations.push(enrichedReservation);
+
+                  // Vérifier si c'est la dernière réservation
+                  if (index === reservations.length - 1) {
+                    this.reservations = enrichedReservations;
+                    this.displayedReservations = enrichedReservations;
+                    console.log('✅ [Final] Toutes les réservations enrichies:', this.displayedReservations);
+                  }
+                },
+                (error) => {
+                  console.error(`❌ [Erreur Appareil] Impossible de récupérer l'appareil pour ID ${reservation.deviceId}:`, error);
+                }
+              );
+            },
+            (error) => {
+              console.error(`❌ [Erreur Utilisateur] Impossible de récupérer l'utilisateur pour ID ${reservation.user}:`, error);
+            }
+          );
+        });
       },
       (error) => {
-        console.error('Erreur lors du chargement des réservations :', error);
-        alert('Impossible de charger les réservations.');
+        console.error('❌ [Erreur] Impossible de charger les réservations:', error);
       }
     );
   }
 
   // Filtrer les réservations en fonction du terme de recherche
   filterReservations(): void {
+    console.log('🔍 [Filtrage] Terme de recherche:', this.searchTerm);
+
     this.displayedReservations = this.reservations.filter(
       (reservation) =>
-        reservation.user?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        reservation.deviceId?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        reservation.userFullName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        reservation.deviceName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        reservation.deviceReference?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         (reservation.borrowStartDate &&
           new Date(reservation.borrowStartDate).toLocaleDateString().includes(this.searchTerm)) ||
         (reservation.borrowEndDate &&
           new Date(reservation.borrowEndDate).toLocaleDateString().includes(this.searchTerm))
     );
+
+    console.log('📊 [Résultats après filtrage] displayedReservations:', this.displayedReservations);
   }
 
   // Ouvrir la modal pour ajouter ou modifier une réservation
-  openDialog(reservation?: Reservation): void {
+  openDialog(reservation?: any): void {
+    console.log('🟢 [Modal] Ouverture avec réservation:', reservation);
+
     this.isDialogOpen = true;
-    this.isEditing = !!reservation; // Mode édition si une réservation est passée
+    this.isEditing = !!reservation;
     this.dialogReservation = reservation
       ? { ...reservation }
-      : { user: '', deviceId: '', borrowStartDate: undefined, borrowEndDate: undefined }; // Nouvelle réservation
+      : { user: '', deviceId: '', borrowStartDate: undefined, borrowEndDate: undefined };
   }
 
   // Enregistrer une réservation (ajouter ou modifier)
   saveDialogReservation(): void {
+    console.log('💾 [Enregistrement] Tentative de sauvegarde:', this.dialogReservation);
+
     if (this.isEditing) {
-      // Modification d'une réservation existante
       this.reservationService.updateReservation(this.dialogReservation.id!, this.dialogReservation as Reservation).then(
         () => {
-          alert('Réservation modifiée avec succès !');
-          this.loadReservations(); // Recharger la liste
+          alert('✅ Réservation modifiée avec succès !');
+          this.loadReservations();
           this.closeDialog();
         },
         (error) => {
-          console.error('Erreur lors de la modification :', error);
+          console.error('❌ Erreur lors de la modification :', error);
           alert('Impossible de modifier cette réservation.');
         }
       );
     } else {
-      // Ajout d'une nouvelle réservation
       this.reservationService.addReservation(this.dialogReservation as Reservation).then(
         () => {
-          alert('Réservation ajoutée avec succès !');
-          this.loadReservations(); // Recharger la liste
+          alert('✅ Réservation ajoutée avec succès !');
+          this.loadReservations();
           this.closeDialog();
         },
         (error) => {
-          console.error('Erreur lors de l\'ajout :', error);
+          console.error('❌ Erreur lors de l\'ajout :', error);
           alert('Impossible d\'ajouter cette réservation.');
         }
       );
@@ -104,6 +152,8 @@ export class ReservationManagementComponent implements OnInit {
 
   // Fermer la modal
   closeDialog(): void {
+    console.log('🔴 [Modal] Fermeture de la modal');
+
     this.isDialogOpen = false;
     this.dialogReservation = { user: '', deviceId: '', borrowStartDate: undefined, borrowEndDate: undefined };
     this.isEditing = false;
@@ -111,19 +161,19 @@ export class ReservationManagementComponent implements OnInit {
 
   // Supprimer une réservation
   deleteReservation(id: string): void {
+    console.log('🗑 [Suppression] Tentative de suppression de ID:', id);
+
     if (confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) {
       this.reservationService.deleteReservation(id).then(
         () => {
-          alert('Réservation supprimée avec succès !');
-          this.loadReservations(); // Recharger les réservations après suppression
+          alert('✅ Réservation supprimée avec succès !');
+          this.loadReservations();
         },
         (error) => {
-          console.error('Erreur lors de la suppression :', error);
+          console.error('❌ Erreur lors de la suppression :', error);
           alert('Impossible de supprimer cette réservation.');
         }
       );
     }
   }
-
-
 }

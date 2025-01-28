@@ -1,129 +1,85 @@
-
 <div class="reservation-management-container">
-    <h1>Gestion des Réservations</h1>
-  
-    <!-- Barre de recherche -->
-    <div class="header">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Rechercher une réservation</mat-label>
-        <input
-          matInput
-          [(ngModel)]="searchTerm"
-          (input)="filterReservations()"
-          placeholder="Utilisateur, appareil ou date"
-        />
-        <button
-          *ngIf="searchTerm"
-          mat-icon-button
-          matSuffix
-          (click)="searchTerm=''; filterReservations()"
-          aria-label="Clear"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-  
-    <!-- Liste des réservations -->
-    <table mat-table [dataSource]="displayedReservations" class="reservation-table">
-      <!-- Utilisateur -->
-      <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef>Utilisateur</th>
-        <td mat-cell *matCellDef="let reservation">{{ reservation.user }}</td>
-      </ng-container>
-  
-      <!-- ID de l'appareil -->
-      <ng-container matColumnDef="deviceId">
-        <th mat-header-cell *matHeaderCellDef>Appareil</th>
-        <td mat-cell *matCellDef="let reservation">{{ reservation.deviceId }}</td>
-      </ng-container>
-  
-      <!-- Date de début -->
-      <ng-container matColumnDef="borrowStartDate">
-        <th mat-header-cell *matHeaderCellDef>Début</th>
-        <td mat-cell *matCellDef="let reservation">
-          {{ reservation.borrowStartDate | date: 'shortDate' }}
-        </td>
-      </ng-container>
-  
-      <!-- Date de fin -->
-      <ng-container matColumnDef="borrowEndDate">
-        <th mat-header-cell *matHeaderCellDef>Fin</th>
-        <td mat-cell *matCellDef="let reservation">
-          {{ reservation.borrowEndDate | date: 'shortDate' }}
-        </td>
-      </ng-container>
-  
-      <!-- Actions -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let reservation">
-          <button mat-icon-button color="primary" (click)="openDialog(reservation)" aria-label="Modifier">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteReservation(reservation.id)" aria-label="Supprimer">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-  
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="['user', 'deviceId', 'borrowStartDate', 'borrowEndDate', 'actions']"></tr>
-  
-      <!-- Data Rows -->
-      <tr mat-row *matRowDef="let row; columns: ['user', 'deviceId', 'borrowStartDate', 'borrowEndDate', 'actions'];"></tr>
-    </table>
-  
-    <p *ngIf="displayedReservations.length === 0">Aucune réservation trouvée.</p>
-  
-    <!-- Modal -->
-    <div *ngIf="isDialogOpen" class="modal">
-      <div class="modal-content">
-        <h2>{{ isEditing ? 'Modifier' : 'Ajouter' }} une réservation</h2>
-  
-        <form>
-          <mat-form-field appearance="fill">
-            <mat-label>Utilisateur</mat-label>
-            <input matInput [(ngModel)]="dialogReservation.user" name="user" required />
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill">
-            <mat-label>ID de l'appareil</mat-label>
-            <input matInput [(ngModel)]="dialogReservation.deviceId" name="deviceId" required />
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill" class="date-field">
-            <mat-label>Date de début</mat-label>
-            <input
-              matInput
-              [matDatepicker]="startPicker"
-              [(ngModel)]="dialogReservation.borrowStartDate"
-              name="borrowStartDate"
-              required
-            />
-            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill" class="date-field">
-            <mat-label>Date de fin</mat-label>
-            <input
-              matInput
-              [matDatepicker]="endPicker"
-              [(ngModel)]="dialogReservation.borrowEndDate"
-              name="borrowEndDate"
-              required
-            />
-            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-          </mat-form-field>
-  
-          <div class="form-actions">
-            <button mat-raised-button color="primary" type="button" (click)="saveDialogReservation()">Enregistrer</button>
-            <button mat-button type="button" (click)="closeDialog()">Annuler</button>
-          </div>
-        </form>
-      </div>
-    </div>
+  <h1>Gestion des Réservations</h1>
+
+  <!-- Barre de recherche -->
+  <div class="header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Rechercher une réservation</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (input)="filterReservations()"
+        placeholder="Utilisateur, appareil ou date"
+      />
+      <button
+        *ngIf="searchTerm"
+        mat-icon-button
+        matSuffix
+        (click)="searchTerm=''; filterReservations()"
+        aria-label="Clear"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
   </div>
-  
+
+  <!-- Liste des réservations -->
+  <table mat-table [dataSource]="displayedReservations" class="reservation-table">
+    <!-- Utilisateur -->
+    <ng-container matColumnDef="userFullName">
+      <th mat-header-cell *matHeaderCellDef>Utilisateur</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.userFullName }}</td>
+    </ng-container>
+
+    <!-- Nom de l'appareil -->
+    <ng-container matColumnDef="deviceName">
+      <th mat-header-cell *matHeaderCellDef>Appareil</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.deviceName }}</td>
+    </ng-container>
+
+    <!-- Référence de l'appareil -->
+    <ng-container matColumnDef="deviceReference">
+      <th mat-header-cell *matHeaderCellDef>Référence</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.deviceReference }}</td>
+    </ng-container>
+
+    <!-- Version de l'appareil -->
+    <ng-container matColumnDef="deviceVersion">
+      <th mat-header-cell *matHeaderCellDef>Version</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.deviceVersion }}</td>
+    </ng-container>
+
+    <!-- Date de début -->
+    <ng-container matColumnDef="borrowStartDate">
+      <th mat-header-cell *matHeaderCellDef>Début</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.borrowStartDate | date: 'shortDate' }}</td>
+    </ng-container>
+
+    <!-- Date de fin -->
+    <ng-container matColumnDef="borrowEndDate">
+      <th mat-header-cell *matHeaderCellDef>Fin</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.borrowEndDate | date: 'shortDate' }}</td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let reservation">
+        <button mat-icon-button color="primary" (click)="openDialog(reservation)" aria-label="Modifier">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteReservation(reservation.id)" aria-label="Supprimer">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header Row -->
+    <tr mat-header-row *matHeaderRowDef="['userFullName', 'deviceName', 'deviceReference', 'deviceVersion', 'borrowStartDate', 'borrowEndDate', 'actions']"></tr>
+
+    <!-- Data Rows -->
+    <tr mat-row *matRowDef="let row; columns: ['userFullName', 'deviceName', 'deviceReference', 'deviceVersion', 'borrowStartDate', 'borrowEndDate', 'actions'];"></tr>
+  </table>
+
+  <p *ngIf="displayedReservations.length === 0">Aucune réservation trouvée.</p>
+</div>
